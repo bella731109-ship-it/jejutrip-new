@@ -6,6 +6,10 @@
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="default" />
 <meta name="theme-color" content="#F8EED3" />
+<meta name="apple-mobile-web-app-title" content="濟州旅行" />
+<link rel="apple-touch-icon" href="icon.png" />
+<link rel="icon" type="image/png" href="icon.png" />
+<link rel="manifest" href="manifest.webmanifest" />
 <title>濟州島旅行手帳 2026</title>
 
 <!-- 字型：日系圓體 -->
@@ -191,6 +195,26 @@
             </div>
             <span class="text-[11px] text-sub text-right leading-tight">{{ curWeather.place }}<br />{{ curWeather.desc }}</span>
           </div>
+
+          <!-- 今日穿搭 -->
+          <details class="soft-card rounded-[22px] px-4 py-3.5 mt-3 group" open>
+            <summary class="list-none flex items-center gap-2 cursor-pointer">
+              <span class="w-8 h-8 rounded-xl bg-[#F9E5E9] text-[#D88C9A] grid place-items-center" v-html="icon('shirt','w-[18px] h-[18px]')"></span>
+              <span class="font-maru font-bold text-[15px]">今日穿搭</span>
+              <span class="text-[11px] text-sub">體感最低約 {{ outfit.feel }}°</span>
+              <span class="ml-auto text-sub transition-transform group-open:rotate-180" v-html="icon('chev','w-4 h-4')"></span>
+            </summary>
+            <div class="mt-3 flex flex-wrap items-center gap-1.5">
+              <template v-for="(x, i) in outfit.layers" :key="x">
+                <span class="px-2.5 py-1 rounded-full bg-cream text-[12px]">{{ x }}</span>
+                <span v-if="i < outfit.layers.length - 1" class="text-[#D9CBAF] text-xs">＋</span>
+              </template>
+            </div>
+            <ul class="mt-3 space-y-1.5 text-[12px] text-ink/80 leading-relaxed">
+              <li v-for="t in outfit.tips" :key="t" class="flex gap-1.5"><span class="text-honey">•</span><span>{{ t }}</span></li>
+            </ul>
+            <p class="mt-2 text-[10px] text-sub">{{ outfit.source }}</p>
+          </details>
         </div>
 
         <!-- 行程列表 -->
@@ -686,6 +710,17 @@ const DATES = ['2026-11-28','2026-11-29','2026-11-30','2026-12-01','2026-12-02',
 const CATS = ['景點','住宿','美食','購物','航班','其他'];
 const EXP_CATS = ['交通','飲食','住宿','門票','購物','其他'];
 const STORE_KEY = 'jeju-trip-2026-v2';
+
+/* 每天依行程內容的穿搭小提醒 */
+const DAY_WEAR = {
+  '2026-11-28': '早上搭機、晚上看亂打秀：室內有暖氣，洋蔥式穿法方便穿脫',
+  '2026-11-29': '萬丈窟洞內陰涼潮濕、地面濕滑：多帶一件外套，穿防滑好走的鞋',
+  '2026-11-30': '清晨爬日出峰＋渡輪海風是全程最冷的一天：毛帽、手套、圍巾全上，穿運動鞋',
+  '2026-12-01': '水族館在室內、民俗村和瀑布在戶外：外套好穿脫，瀑布步道有階梯',
+  '2026-12-02': '園區戶外走路多：好走的鞋＋可收進包包的外套',
+  '2026-12-03': '9.81 Park 規定穿包鞋／平底鞋（不能穿涼鞋、高跟鞋）；挾才海邊傍晚風大',
+  '2026-12-04': '早上海邊散步風大；回程飛機上帶件薄外套，退稅品記得放隨身',
+};
 const AIRPORT = { lat: 33.5070, lng: 126.4930 };
 
 const DEFAULT_INFO = {
@@ -866,6 +901,8 @@ const ICONS = {
   check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',
   camera:'<path d="M4 8h3l1.8-2.5h6.4L17 8h3v11H4z"/><circle cx="12" cy="13.2" r="3.5"/>',
   ticket:'<path d="M3.5 8.5V6.5h17v2a2.5 2.5 0 0 0 0 5v2h-17v-2a2.5 2.5 0 0 0 0-5z" transform="translate(0 1)"/><path d="M14 7.5v9" stroke-dasharray="2 2"/>',
+  shirt:'<path d="M8.5 4L4 6.5l1.8 4L7.5 10v10h9V10l1.7.5 1.8-4L15.5 4c-.6 1.5-1.9 2.4-3.5 2.4S9.1 5.5 8.5 4z"/>',
+  chev:'<path d="M6 9l6 6 6-6"/>',
   sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/>',
   cloud:'<path d="M7 18.5a4.5 4.5 0 0 1-.6-9A6 6 0 0 1 17.6 9 4.8 4.8 0 0 1 17 18.5z"/>',
   rain:'<path d="M7 15a4.5 4.5 0 0 1-.6-9A6 6 0 0 1 17.6 5.5 4.8 4.8 0 0 1 17 15z"/><path d="M8.5 18.5l-1 2.5M12.5 18.5l-1 2.5M16.5 18.5l-1 2.5"/>',
@@ -1058,7 +1095,7 @@ createApp({
       if (weatherCache[key]) return;
       weatherCache[key] = { loading: true };
       try {
-        const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current=temperature_2m,apparent_temperature,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min&timezone=Asia%2FSeoul&forecast_days=16`;
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current=temperature_2m,apparent_temperature,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,wind_speed_10m_max,precipitation_probability_max&timezone=Asia%2FSeoul&forecast_days=16`;
         const j = await (await fetch(url)).json();
         weatherCache[key] = j;
       } catch (e) { weatherCache[key] = { error: true }; }
@@ -1087,6 +1124,33 @@ createApp({
       if (!w.current) return { ...base, label:'出發前 16 天內會顯示當日預報' };
       const k = weatherKind(w.current.weather_code);
       return { kind:k, temp:`${Math.round(w.current.temperature_2m)}°`, feel:`${Math.round(w.current.apparent_temperature)}°`, label:'目前實況（出發前 16 天內顯示當日預報）', place, desc:WEATHER_DESC[k] };
+    });
+
+    /* ---------- 今日穿搭 ---------- */
+    const outfit = computed(() => {
+      const l = dayLoc.value;
+      const w = weatherCache[`${l.lat.toFixed(1)},${l.lng.toFixed(1)}`];
+      const idx = w?.daily ? w.daily.time.indexOf(curDate.value) : -1;
+      let feel, wind = null, rainP = null, kind = 'cloud', source;
+      if (idx >= 0) {
+        feel = w.daily.apparent_temperature_min[idx];
+        wind = w.daily.wind_speed_10m_max?.[idx];
+        rainP = w.daily.precipitation_probability_max?.[idx];
+        kind = weatherKind(w.daily.weather_code[idx]);
+        source = '依當日預報';
+      } else {
+        feel = 4; wind = 30; source = '依往年 11 月底–12 月初氣候（白天 10–15°C、早晚 5–8°C、風大）';
+      }
+      let layers;
+      if (feel <= 2)       layers = ['發熱衣', '毛衣／刷毛衛衣', '羽絨外套', '毛帽・圍巾・手套'];
+      else if (feel <= 7)  layers = ['發熱衣', '針織衫／衛衣', '防風外套或薄羽絨', '圍巾・手套'];
+      else if (feel <= 12) layers = ['長袖上衣', '薄毛衣', '防風外套'];
+      else                 layers = ['長袖上衣', '輕薄外套'];
+      const tips = [];
+      if (kind === 'rain' || kind === 'snow' || (rainP != null && rainP >= 50)) tips.push(`降雨機率${rainP != null ? ' ' + rainP + '%' : '高'}：帶摺疊傘，外套選防潑水`);
+      if (wind != null && wind >= 25) tips.push('海風很強：外套要能擋風，帽子選有帽繩或毛帽');
+      if (DAY_WEAR[curDate.value]) tips.push(DAY_WEAR[curDate.value]);
+      return { layers, tips, source, feel: Math.round(feel) };
     });
 
     /* ---------- 匯率（open.er-api.com，每日更新） ---------- */
@@ -1267,7 +1331,7 @@ createApp({
       tabs, tab, switchTab,
       curDate, selectDate, weekday, dayNum, md, fmtFull, nights, hotelTonight,
       catFilter, visibleItems, hasHours, flightOf, segments, cycleMode, listEl,
-      openNaver, curWeather,
+      openNaver, curWeather, outfit,
       fx, fxUnit, fxResult, fxQuick, krwToTwd,
       shopping, expenses, info, totalKRW, sumBy, catSum, expenseGroups,
       sheet, form, sheetTitle, confirmDelete, openSheet, closeSheet, editItem, onFab,
