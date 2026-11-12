@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>濟州島 7天6夜｜11/28–12/4</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Huninn&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FFFCF6;
+    --ink:#3E3A39;
+    --coral:#F2A497;
+    --yellow:#F6D27A;
+    --water:#A8D3E6;
+    --bamboo:#B9DAA5;
+    --line:3px solid var(--ink);
+    --r-lg:28px;
+    --r-md:20px;
+    --r-sm:999px;
+    --nav-h:60px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+  body{
+    font-family:"Huninn","PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;
+    background:var(--paper);
+    color:var(--ink);
+    line-height:1.6;
+    font-size:16px;
+    padding-top:var(--nav-h);
+  }
+  a{color:inherit}
+  button{font-family:inherit;color:inherit}
+  .wrap{max-width:720px;margin:0 auto;padding:0 16px}
+  section{scroll-margin-top:calc(var(--nav-h) + 12px);padding:28px 0 8px}
+
+  /* ---------- 固定選單 ---------- */
+  .nav{
+    position:fixed;inset:0 0 auto 0;height:var(--nav-h);z-index:50;
+    background:var(--paper);border-bottom:var(--line);
+  }
+  .nav .wrap{height:100%;display:flex;align-items:center;gap:10px}
+  .brand{display:flex;align-items:center;gap:6px;font-size:18px;white-space:nowrap;text-decoration:none}
+  .brand svg{width:30px;height:30px;flex:none}
+  .nav ul{
+    list-style:none;display:flex;gap:6px;margin-left:auto;
+    overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;
+  }
+  .nav ul::-webkit-scrollbar{display:none}
+  .nav a.link{
+    display:block;text-decoration:none;font-size:14px;padding:4px 11px;
+    border:2.5px solid var(--ink);border-radius:var(--r-sm);background:var(--paper);white-space:nowrap;
+  }
+  .nav a.link:active,.nav a.link:hover{background:var(--yellow)}
+
+  /* ---------- 標題 ---------- */
+  .sec-title{display:flex;align-items:center;gap:10px;font-size:22px;margin-bottom:14px}
+  .sec-title .dot{
+    width:34px;height:34px;border:var(--line);border-radius:50%;
+    display:grid;place-items:center;flex:none;
+  }
+  .sec-title .dot svg{width:20px;height:20px}
+
+  .card{background:var(--paper);border:var(--line);border-radius:var(--r-lg);padding:18px}
+
+  /* ---------- 首頁 ---------- */
+  .hero{padding-top:18px}
+  .hero-card{padding:0;overflow:hidden}
+  .hero-art{display:block;width:100%;height:auto;border-bottom:var(--line);background:var(--paper)}
+  .hero-body{padding:18px 18px 20px;text-align:center}
+  .hero-body .kicker{
+    display:inline-block;font-size:13px;padding:2px 12px;border:2.5px solid var(--ink);
+    border-radius:var(--r-sm);background:var(--bamboo);margin-bottom:8px;
+  }
+  .hero-body h1{font-size:30px;line-height:1.25;letter-spacing:.04em}
+  .hero-body .sub{margin-top:4px;font-size:15px}
+
+  .countdown{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:16px}
+  .cd-box{border:var(--line);border-radius:var(--r-md);padding:8px 0 6px}
+  .cd-box:nth-child(1){background:var(--coral)}
+  .cd-box:nth-child(2){background:var(--yellow)}
+  .cd-box:nth-child(3){background:var(--water)}
+  .cd-box:nth-child(4){background:var(--bamboo)}
+  .cd-num{font-size:28px;line-height:1.1;font-variant-numeric:tabular-nums}
+  .cd-unit{font-size:12px}
+  .cd-label{margin-top:12px;font-size:14px}
+
+  /* ---------- 航班 ---------- */
+  .flights{display:grid;gap:14px}
+  .flight{position:relative;padding:16px 18px}
+  .flight.out{background:var(--paper)}
+  .flight-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px}
+  .pill{
+    display:inline-flex;align-items:center;gap:4px;font-size:13px;padding:2px 10px;
+    border:2.5px solid var(--ink);border-radius:var(--r-sm);white-space:nowrap;
+  }
+  .pill.coral{background:var(--coral)}
+  .pill.water{background:var(--water)}
+  .pill.yellow{background:var(--yellow)}
+  .pill.bamboo{background:var(--bamboo)}
+  .route{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:6px;text-align:center}
+  .route .code{font-size:30px;line-height:1.1;letter-spacing:.05em}
+  .route .city{font-size:13px}
+  .route .time{font-size:20px;margin-top:2px}
+  .route .mid svg{width:76px;height:30px;display:block}
+  .flight-note{font-size:13px;margin-top:10px;padding-top:10px;border-top:2.5px dashed var(--ink)}
+
+  /* ---------- 每日行程 ---------- */
+  .tabs{
+    display:flex;gap:8px;overflow-x:auto;padding:4px 2px 12px;margin:0 -2px;
+    scrollbar-width:none;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity;
+  }
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{
+    flex:none;scroll-snap-align:start;cursor:pointer;
+    border:var(--line);border-radius:var(--r-md);background:var(--paper);
+    padding:6px 12px;min-width:74px;text-align:center;line-height:1.25;
+    transition:transform .15s ease;
+  }
+  .tab b{display:block;font-size:17px;font-weight:normal}
+  .tab small{font-size:12px}
+  .tab[aria-selected="true"]{background:var(--coral);transform:translateY(-3px)}
+  .tab:focus-visible{outline:3px dashed var(--ink);outline-offset:3px}
+
+  .day-head{display:flex;align-items:center;gap:14px;margin-bottom:6px}
+  .day-icon{
+    width:72px;height:72px;flex:none;border:var(--line);border-radius:22px;
+    display:grid;place-items:center;background:var(--water);
+  }
+  .day-icon svg{width:56px;height:56px}
+  .day-head h3{font-size:20px;line-height:1.3;font-weight:normal}
+  .day-head .stay{font-size:13px;margin-top:4px;display:inline-flex;align-items:center;gap:4px}
+
+  .timeline{list-style:none;margin-top:16px;position:relative}
+  .timeline::before{
+    content:"";position:absolute;left:21px;top:8px;bottom:8px;
+    border-left:3px dashed var(--ink);
+  }
+  .tl-item{position:relative;padding-left:56px;margin-bottom:14px}
+  .tl-dot{
+    position:absolute;left:8px;top:14px;width:30px;height:30px;border:var(--line);
+    border-radius:50%;background:var(--paper);display:grid;place-items:center;font-size:13px;
+  }
+  .tl-item.must .tl-dot{background:var(--coral)}
+  .tl-card{border:var(--line);border-radius:var(--r-md);padding:12px 14px;background:var(--paper)}
+  .tl-item.must .tl-card{background:#FFF3EF}
+  .tl-time{font-size:13px;display:inline-block;padding:0 8px;border:2px solid var(--ink);border-radius:var(--r-sm);background:var(--yellow)}
+  .tl-title{font-size:17px;margin:6px 0 2px;line-height:1.4}
+  .tl-desc{font-size:14px}
+  .tl-desc li{margin-left:1.1em}
+  .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+  .tag{font-size:12px;padding:1px 9px;border:2px solid var(--ink);border-radius:var(--r-sm);display:inline-flex;align-items:center;gap:3px}
+  .tag.car{background:var(--water)}
+  .tag.walk{background:var(--bamboo)}
+  .tag.boat{background:var(--yellow)}
+  .tag.plane{background:var(--coral)}
+  .tag.bus{background:var(--paper)}
+  .must-badge{
+    font-size:12px;padding:1px 9px;border:2px solid var(--ink);border-radius:var(--r-sm);
+    background:var(--coral);margin-left:6px;vertical-align:2px;white-space:nowrap;
+  }
+  .map-btn{
+    margin-left:auto;font-size:12px;padding:1px 10px;border:2px solid var(--ink);border-radius:var(--r-sm);
+    background:var(--paper);text-decoration:none;display:inline-flex;align-items:center;gap:3px;white-space:nowrap;
+  }
+  .map-btn:hover,.map-btn:active{background:var(--bamboo)}
+  .map-btn:focus-visible{outline:3px dashed var(--ink);outline-offset:2px}
+  .hotel .map-btn{margin-left:6px}
+  .legend{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 14px;font-size:12px;align-items:center}
+
+  /* 切換日期的彈跳效果 */
+  @keyframes pop{
+    0%{opacity:0;transform:translateY(18px) scale(.96)}
+    60%{opacity:1;transform:translateY(-6px) scale(1.02)}
+    80%{transform:translateY(2px) scale(.995)}
+    100%{opacity:1;transform:none}
+  }
+  .bounce{animation:pop .55s cubic-bezier(.3,1.4,.5,1) both}
+
+  /* ---------- 住宿 ---------- */
+/* FOOD-CSS-START */
+  .food-note{font-size:13px;margin:-4px 0 10px}
+  .food-area{margin-bottom:10px;padding:0;overflow:hidden}
+  .food-area summary{cursor:pointer;padding:12px 16px;font-size:16px;list-style:none;display:flex;justify-content:space-between;align-items:center}
+  .food-area summary::-webkit-details-marker{display:none}
+  .food-area summary::after{content:'＋';font-size:18px}
+  .food-area[open] summary::after{content:'－'}
+  .food-area summary small{font-size:12px;opacity:.7;margin-left:6px}
+  .food-items{display:grid;gap:8px;padding:0 12px 12px}
+  .food-item{border:2px dashed #e8d9c4;border-radius:14px;padding:10px 12px}
+  .food-item h4{font-size:15px;font-weight:normal}
+  .food-item p{font-size:12.5px;margin-top:3px}
+  .food-item .map-btn{margin-top:6px;display:inline-block}
+  @media (min-width:720px){.food-items{grid-template-columns:1fr 1fr}}
+/* FOOD-CSS-END */
+  .hotels{display:grid;gap:12px}
+  .hotel{display:grid;grid-template-columns:62px 1fr;gap:12px;align-items:start;padding:14px}
+  .hotel .night{
+    border:var(--line);border-radius:18px;text-align:center;padding:6px 0;line-height:1.2;
+  }
+  .hotel .night b{display:block;font-size:22px;font-weight:normal}
+  .hotel .night small{font-size:11px}
+  .hotel h4{font-size:17px;font-weight:normal;line-height:1.35}
+  .hotel p{font-size:13px;margin-top:4px}
+  .hotel .area{margin-top:6px}
+
+  /* ---------- 待辦 ---------- */
+  .todo-progress{display:flex;align-items:center;gap:10px;margin-bottom:12px;font-size:14px}
+  .bar{flex:1;height:18px;border:var(--line);border-radius:var(--r-sm);overflow:hidden;background:var(--paper)}
+  .bar i{display:block;height:100%;width:0;background:var(--bamboo);border-right:3px solid var(--ink);transition:width .35s ease}
+  .bar i.zero{border-right:none}
+  .todo{list-style:none;display:grid;gap:10px}
+  .todo label{
+    display:flex;gap:12px;align-items:flex-start;cursor:pointer;
+    border:var(--line);border-radius:var(--r-md);padding:12px 14px;background:var(--paper);
+  }
+  .todo input{position:absolute;opacity:0;pointer-events:none}
+  .box{
+    width:26px;height:26px;flex:none;border:var(--line);border-radius:9px;background:var(--paper);
+    display:grid;place-items:center;margin-top:1px;
+  }
+  .box svg{width:16px;height:16px;opacity:0;transform:scale(.4);transition:opacity .15s,transform .25s cubic-bezier(.3,1.6,.5,1)}
+  .todo input:checked + label{background:#F3F9EF}
+  .todo input:checked + label .box{background:var(--bamboo)}
+  .todo input:checked + label .box svg{opacity:1;transform:none}
+  .todo input:checked + label .txt{text-decoration:line-through;text-decoration-thickness:2px;opacity:.6}
+  .todo input:focus-visible + label{outline:3px dashed var(--ink);outline-offset:3px}
+  .todo .txt{font-size:15px}
+  .todo .txt small{display:block;font-size:12px;opacity:.85}
+
+  footer{padding:30px 0 40px;text-align:center;font-size:13px}
+  footer svg{width:120px;height:auto;display:block;margin:0 auto 8px}
+
+  /* ---------- 插圖動畫 ---------- */
+  .anim{transform-box:fill-box;transform-origin:center}
+  @keyframes float{0%,100%{transform:translate(0,0) rotate(-2deg)}50%{transform:translate(6px,-6px) rotate(2deg)}}
+  @keyframes drift{0%,100%{transform:translateX(0)}50%{transform:translateX(10px)}}
+  @keyframes bob{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-4px) rotate(2deg)}}
+  @keyframes wave{0%{transform:translateX(0)}100%{transform:translateX(-40px)}}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @keyframes sway{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(6deg)}}
+  @keyframes twinkle{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
+  .a-float{animation:float 5s ease-in-out infinite}
+  .a-drift{animation:drift 7s ease-in-out infinite}
+  .a-drift2{animation:drift 9s ease-in-out infinite reverse}
+  .a-bob{animation:bob 3.2s ease-in-out infinite}
+  .a-wave{animation:wave 4s linear infinite}
+  .a-wave2{animation:wave 6s linear infinite reverse}
+  .a-spin{animation:spin 24s linear infinite}
+  .a-sway{animation:sway 3.6s ease-in-out infinite;transform-origin:50% 100%}
+  .a-twinkle{animation:twinkle 2.4s ease-in-out infinite}
+
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto}
+    *,*::before,*::after{
+      animation:none !important;
+      transition:none !important;
+    }
+    .tab[aria-selected="true"]{transform:none}
+  }
+
+  @media (min-width:600px){
+    .hero-body h1{font-size:36px}
+    .flights{grid-template-columns:1fr 1fr}
+    .hotels{grid-template-columns:1fr 1fr}
+  }
+</style>
+</head>
+<body>
+
+<!-- ========== 固定選單 ========== -->
+<nav class="nav" aria-label="主選單">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="回到首頁">
+      <svg viewBox="0 0 40 40" aria-hidden="true">
+        <circle cx="20" cy="22" r="14" fill="#F6D27A" stroke="#3E3A39" stroke-width="3"/>
+        <path d="M20 8c2-5 7-6 9-4-2 3-5 4-9 4z" fill="#B9DAA5" stroke="#3E3A39" stroke-width="2.5" stroke-linejoin="round"/>
+        <path d="M20 8v4" stroke="#3E3A39" stroke-width="2.5" stroke-linecap="round"/>
+        <circle cx="15" cy="20" r="1.8" fill="#3E3A39"/><circle cx="25" cy="20" r="1.8" fill="#3E3A39"/>
+        <path d="M16.5 26q3.5 3 7 0" fill="none" stroke="#3E3A39" stroke-width="2.5" stroke-linecap="round"/>
+      </svg>
+      <span>濟州之旅</span>
+    </a>
+    <ul>
+      <li><a class="link" href="#flight">航班</a></li>
+      <li><a class="link" href="#days">行程</a></li>
+      <li><a class="link" href="#food">美食</a></li>
+      <li><a class="link" href="#hotel">住宿</a></li>
+      <li><a class="link" href="#todo">待辦</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<!-- ========== 首頁 ========== -->
+<section id="top" class="hero">
+  <div class="card hero-card">
+    <svg class="hero-art" viewBox="0 0 360 250" role="img" aria-label="插圖：城山日出峰、太陽、飛機、牛島渡輪、石頭爺爺和橘子">
+      <!-- 太陽 -->
+      <g transform="translate(292 58)">
+        <g class="anim a-spin">
+          <g stroke="#3E3A39" stroke-width="3" stroke-linecap="round">
+            <line x1="0" y1="-38" x2="0" y2="-30"/><line x1="0" y1="38" x2="0" y2="30"/>
+            <line x1="-38" y1="0" x2="-30" y2="0"/><line x1="38" y1="0" x2="30" y2="0"/>
+            <line x1="-27" y1="-27" x2="-21" y2="-21"/><line x1="27" y1="27" x2="21" y2="21"/>
+            <line x1="-27" y1="27" x2="-21" y2="21"/><line x1="27" y1="-27" x2="21" y2="-21"/>
+          </g>
+        </g>
+        <circle r="22" fill="#F6D27A" stroke="#3E3A39" stroke-width="3"/>
+        <circle cx="-7" cy="-3" r="2" fill="#3E3A39"/><circle cx="7" cy="-3" r="2" fill="#3E3A39"/>
+        <path d="M-6 6q6 5 12 0" fill="none" stroke="#3E3A39" stroke-width="2.5" stroke-linecap="round"/>
+        <circle cx="-12" cy="4" r="3" fill="#F2A497"/><circle cx="12" cy="4" r="3" fill="#F2A497"/>
+      </g>
+
+      <!-- 雲 -->
+      <g class="anim a-drift">
+        <path d="M40 70h52a12 12 0 0 0-10-18 16 16 0 0 0-28-4 12 12 0 0 0-14 22z" fill="#FFFCF6" stroke="#3E3A39" stroke-width="3" stroke-linejoin="round"/>
+      </g>
+      <g class="anim a-drift2">
+        <path d="M196 40h40a9 9 0 0 0-8-14 12 12 0 0 0-21-3 9 9 0 0 0-11 17z" fill="#FFFCF6" stroke="#3E3A39" stroke-width="3" stroke-linejoin="round"/>
+      </g>
+
+      <!-- 飛機 -->
+      <g transform="translate(118 34)">
+        <g class="anim a-float">
+          <path d="M0 14 L44 8 Q56 7 56 14 Q56 21 44 20 L0 14z" fill="#FFFCF6" stroke="#3E3A39" stroke-width="3" stroke-linejoin="round"/>
+          <path d="M22 11 L30 -4 L36 -4 L34 11z" fill="#F2A497" stroke="#3E3A39" stroke-width="3" stroke-linejoin="round"/>
+          <path d="M22 17 L30 30 L36 30 L34 17z" fill="#F2A497" stroke="#3E3A39" stroke-width="3" stroke-linejoin="round"/>
+          <path d="M2 14 L-4 4 L4 4 L10 13z" fill="#A8D3E6" stroke="#3E3A39" stroke-width="3" stroke-linejoin="round"/>
+          <circle cx="44" cy="13" r="2" fill="#3E3A39"/><circle cx="37" cy="13" r="2" fill="#3E3A39"/>
+        </g>
+      </g>
+
+      <!-- 星星 -->
+      <path class="anim a-twinkle" d="M24 112l3 6 6 3-6 3-3 6-3-6-6-3 6-3z" fill="#F6D27A" stroke="#3E3A39" stroke-width="2.5" stroke-linejoin="round"/>
+      <path class="anim a-twinkle" style="animation-delay:1.2s" d="M330 120l2 4 4 2-4 2-2 4-2-4-4-2 4-2z" fill="#F6D27A" stroke="#3E3A39" stroke-width="2.5" stroke-linejoin="round"/>
+
+      <!-- 城山日出峰 -->
+      <path d="M150 178 Q160 120 196 110 L206 104 L232 104 L242 110 Q276 122 290 178z" fill="#B9DAA5" stroke="#3E3A39" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M206 104 Q219 116 232 104" fill="#FFFCF6" stroke="#3E3A39" stroke-width="3" stroke-linejoin="round"/>
+      <g fill="none" stroke="#3E3A39" stroke-width="2.5" stroke-linecap="round">
+        <path d="M182 130 Q176 150 174 172"/><path d="M204 122 Q200 148 200 172"/>
+        <path d="M232 122 Q238 148 238 172"/><path d="M256 130 Q264 150 266 172"/>
+      </g>
+      <!-- 小山丘 -->
+      <path d="M96 178 Q118 146 150 162 Q160 170 164 178z" fill="#B9DAA5" stroke="#3E3A39" stroke-width="3" stroke-linejoin="round"/>
+
+      <!-- 海 -->
+      <rect x="0" y="176" width="360" height="74" fill="#A8D3E6"/>
+      <line x1="0" y1="176" x2="360" y2="176" stroke="#3E3A39" stroke-width="3"/>
+      <g class="anim a-wave">
+        <path d="M0 200 q10 -8 20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0" fill="none" stroke="#FFFCF6" stroke-width="3" stroke-linecap="round"/>
+      </g>
+      <g class="anim a-wave2">
+        <path d="M-40 228 q10 -7 20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0" fill="none" stroke="#FFFCF6" stroke-width="3" stroke-linecap="round"/>
+      </g>
+
+      <!-- 渡輪（往牛島） -->
+      <g transform="translate(250 182)">
+        <g class="anim a-bob">
+          <path d="M0 18 L64 18 L56 34 L8 34z" fill="#F2A497" stroke="#3E3A39" stroke-width="3" stroke-linejoin="round"/>
+          <rect x="12" y="4" width="36" height="14" rx="4" fill="#FFFCF6" stroke="#3E3A39" stroke-width="3"/>
+          <rect x="20" y="-6" width="12" height="10" rx="3" fill="#F6D27A" stroke="#3E3A39" stroke-width="3"/>
+          <circle cx="20" cy="11" r="2.2" fill="#3E3A39"/><circle cx="30" cy="11" r="2.2" fill="#3E3A39"/><circle cx="40" cy="11" r="2.2" fill="#3E3A39"/>
+        </g>
+      </g>
+
+      <!-- 石頭爺爺（石爺爺 Dol Hareubang） -->
+      <g transform="translate(28 120)">
+        <path d="M10 22 Q8 0 30 0 Q52 0 50 22z" fill="#FFFCF6" stroke="#3E3A39" stroke-width="3" stroke-linejoin="round"/>
+        <rect x="8" y="22" width="44" height="76" rx="20" fill="#FFFCF6" stroke="#3E3A39" stroke-width="3"/>
+        <g fill="#3E3A39"><circle cx="16" cy="30" r="1.6"/><circle cx="44" cy="34" r="1.6"/><circle cx="22" cy="80" r="1.6"/><circle cx="40" cy="86" r="1.6"/><circle cx="30" cy="8" r="1.6"/></g>
+        <ellipse cx="22" cy="40" rx="5" ry="6" fill="#FFFCF6" stroke="#3E3A39" stroke-width="2.5"/>
+        <ellipse cx="38" cy="40" rx="5" ry="6" fill="#FFFCF6" stroke="#3E3A39" stroke-width="2.5"/>
+        <circle cx="22" cy="41" r="2" fill="#3E3A39"/><circle cx="38" cy="41" r="2" fill="#3E3A39"/>
+        <path d="M26 50 Q30 58 34 50" fill="#FFFCF6" stroke="#3E3A39" stroke-width="2.5" stroke-linejoin="round"/>
+        <path d="M24 62 Q30 66 36 62" fill="none" stroke="#3E3A39" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M12 74 Q30 68 34 74" fill="none" stroke="#3E3A39" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M48 80 Q30 76 28 82" fill="none" stroke="#3E3A39" stroke-width="2.5" stroke-linecap="round"/>
+        <circle cx="16" cy="56" r="3.5" fill="#F2A497"/><circle cx="44" cy="56" r="3.5" fill="#F2A497"/>
+      </g>
+
+      <!-- 橘子 -->
+      <g transform="translate(110 196)">
+        <g class="anim a-sway">
+          <circle cx="16" cy="22" r="16" fill="#F6D27A" stroke="#3E3A39" stroke-width="3"/>
+          <path d="M16 6 v-6" stroke="#3E3A39" stroke-width="3" stroke-linecap="round"/>
+          <path d="M16 3 Q26 -6 32 0 Q26 8 16 3z" fill="#B9DAA5" stroke="#3E3A39" stroke-width="2.5" stroke-linejoin="round"/>
+          <circle cx="11" cy="20" r="1.8" fill="#3E3A39"/><circle cx="21" cy="20" r="1.8" fill="#3E3A39"/>
+          <path d="M12.5 26 q3.5 3 7 0" fill="none" stroke="#3E3A39" stroke-width="2.3" stroke-linecap="round"/>
+        </g>
+      </g>
+      <g transform="translate(148 206)">
+        <g class="anim a-sway" style="animation-delay:-1.4s">
+          <circle cx="12" cy="16" r="12" fill="#F2A497" stroke="#3E3A39" stroke-width="3"/>
+          <path d="M12 4 Q20 -4 24 1 Q19 7 12 4z" fill="#B9DAA5" stroke="#3E3A39" stroke-width="2.5" stroke-linejoin="round"/>
+        </g>
+      </g>
+    </svg>
+    <div class="hero-body">
+      <span class="kicker">2026・冬天的島嶼旅行</span>
+      <h1>濟州島 7天6夜</h1>
+      <p class="sub">11/28（六）→ 12/4（五）・繞島一圈的慢慢旅行</p>
+      <div class="countdown" aria-live="polite">
+        <div class="cd-box"><div class="cd-num" id="cd-d">--</div><div class="cd-unit">天</div></div>
+        <div class="cd-box"><div class="cd-num" id="cd-h">--</div><div class="cd-unit">時</div></div>
+        <div class="cd-box"><div class="cd-num" id="cd-m">--</div><div class="cd-unit">分</div></div>
+        <div class="cd-box"><div class="cd-num" id="cd-s">--</div><div class="cd-unit">秒</div></div>
+      </div>
+      <p class="cd-label" id="cd-label">距離 IT632 起飛還有</p>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 航班 ========== -->
+<section id="flight">
+  <h2 class="sec-title">
+    <span class="dot" style="background:var(--coral)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 13l18-3q3 0 3 2t-3 2L2 13z" fill="#FFFCF6" stroke="#3E3A39" stroke-width="2" stroke-linejoin="round"/><path d="M10 11l4-7h3l-2 7M10 14l4 6h3l-2-6" fill="#FFFCF6" stroke="#3E3A39" stroke-width="2" stroke-linejoin="round"/></svg></span>
+    航班資訊
+  </h2>
+  <div class="flights">
+    <article class="card flight out">
+      <div class="flight-head">
+        <span class="pill coral">去程・11/28（六）</span>
+        <span class="pill">台灣虎航 IT632</span>
+      </div>
+      <div class="route">
+        <div><div class="code">RMQ</div><div class="city">台中</div><div class="time">07:00</div></div>
+        <div class="mid" aria-hidden="true">
+          <svg viewBox="0 0 76 30"><path d="M4 20 Q38 -4 72 20" fill="none" stroke="#3E3A39" stroke-width="2.5" stroke-dasharray="4 5" stroke-linecap="round"/><g transform="translate(30 2)"><path d="M0 7l12-2q4 0 4 2t-4 2L0 7z" fill="#F2A497" stroke="#3E3A39" stroke-width="2" stroke-linejoin="round"/></g></svg>
+        </div>
+        <div><div class="code">CJU</div><div class="city">濟州</div><div class="time">10:00–10:15</div></div>
+      </div>
+      <p class="flight-note">飛行約 2 小時・時間是當地時間（韓國比台灣快 1 小時）。抵達後辦入境、領行李、取車約 1 小時。</p>
+    </article>
+    <article class="card flight">
+      <div class="flight-head">
+        <span class="pill water">回程・12/4（五）</span>
+        <span class="pill">台灣虎航 IT633</span>
+      </div>
+      <div class="route">
+        <div><div class="code">CJU</div><div class="city">濟州</div><div class="time">19:50</div></div>
+        <div class="mid" aria-hidden="true">
+          <svg viewBox="0 0 76 30"><path d="M4 20 Q38 -4 72 20" fill="none" stroke="#3E3A39" stroke-width="2.5" stroke-dasharray="4 5" stroke-linecap="round"/><g transform="translate(30 2)"><path d="M0 7l12-2q4 0 4 2t-4 2L0 7z" fill="#A8D3E6" stroke="#3E3A39" stroke-width="2" stroke-linejoin="round"/></g></svg>
+        </div>
+        <div><div class="code">RMQ</div><div class="city">台中</div><div class="time">21:05</div></div>
+      </div>
+      <p class="flight-note">建議 17:30 前到機場。冬季時刻依近期紀錄整理，<b>請以電子機票為準</b>。</p>
+    </article>
+  </div>
+</section>
+
+<!-- ========== 每日行程 ========== -->
+<section id="days">
+  <h2 class="sec-title">
+    <span class="dot" style="background:var(--yellow)"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="4" fill="#FFFCF6" stroke="#3E3A39" stroke-width="2"/><path d="M3 10h18M8 3v4M16 3v4" stroke="#3E3A39" stroke-width="2" stroke-linecap="round"/></svg></span>
+    每日行程
+  </h2>
+  <div class="tabs" role="tablist" aria-label="選擇日期" id="tabs"></div>
+  <div class="legend" aria-label="圖例">
+    <span class="tag car">🚗 自駕</span><span class="tag walk">👟 步行</span><span class="tag boat">⛴ 渡輪</span><span class="tag plane">✈ 飛機</span><span class="must-badge" style="margin-left:0">★ 必去</span>
+  </div>
+  <div class="card" id="day-panel" role="tabpanel" aria-live="polite"></div>
+</section>
+
+
+<!-- FOOD-START -->
+<section id="food">
+  <h2 class="sec-title">
+    <span class="dot" style="background:var(--coral)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11h16a8 8 0 0 1-16 0z" fill="#FFFCF6" stroke="#3E3A39" stroke-width="2" stroke-linejoin="round"/><path d="M8 7c0-2 2-2 2-4M13 7c0-2 2-2 2-4" fill="none" stroke="#3E3A39" stroke-width="2" stroke-linecap="round"/></svg></span>
+    美食口袋名單
+  </h2>
+  <p class="food-note">依每天順路分區，當天自由選。營業時間出發前用 Naver 再確認；不吃辣說「안 맵게 해 주세요」。</p>
+  <div id="food-list"></div>
+</section>
+<!-- FOOD-END -->
+
+<!-- ========== 住宿 ========== -->
+<section id="hotel">
+  <h2 class="sec-title">
+    <span class="dot" style="background:var(--water)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11L12 4l9 7v9H3z" fill="#FFFCF6" stroke="#3E3A39" stroke-width="2" stroke-linejoin="round"/><rect x="10" y="14" width="4" height="6" fill="#F6D27A" stroke="#3E3A39" stroke-width="2"/></svg></span>
+    住宿資訊
+  </h2>
+  <div class="hotels">
+    <article class="card hotel">
+      <div class="night" style="background:var(--coral)"><b>1</b><small>晚</small></div>
+      <div>
+        <h4>三海人觀光飯店<br><small>Hotel Samhaein 삼해인관광호텔</small></h4>
+        <p>📅 11/28（六）</p>
+        <p>📍 濟州市蓮洞 260-9（Yeon-dong 260-9），離機場約 3–4 km，步行可到 Nuwemaru 街吃飯逛街。</p>
+        <p>🛒 附近超市：<a href="https://map.naver.com/p/search/이마트 신제주점" target="_blank" rel="noopener">E-Mart 新濟州店（老衡洞，開車 5–10 分鐘）</a></p>
+        <p class="area"><span class="pill coral">新濟州・蓮洞</span><a class="map-btn" href="https://map.naver.com/p/search/삼해인관광호텔" target="_blank" rel="noopener">📍 Naver 地圖</a></p>
+      </div>
+    </article>
+    <article class="card hotel">
+      <div class="night" style="background:var(--yellow)"><b>2</b><small>晚</small></div>
+      <div>
+        <h4>寶島民宿<br><small>Bomulseom Pension 보물섬펜션</small></h4>
+        <p>📅 11/29（日）– 11/30（一）</p>
+        <p>📍 서귀포시 성산읍 한도로242번길 10-11（63643）。走路約 15 分鐘到城山日出峰、約 9 分鐘到牛島船的碼頭，看日出、搭船都不用開車。11–4 月不開放烤肉區。</p>
+        <p>🛒 附近超市：<a href="https://map.naver.com/p/search/성산일출봉농협 하나로마트" target="_blank" rel="noopener">成山日出峰農協 하나로마트（古城里，開車約 5 分鐘）；民宿走路 5 分鐘有便利商店</a></p>
+        <p class="area"><span class="pill yellow">城山</span><a class="map-btn" href="https://map.naver.com/p/search/보물섬펜션" target="_blank" rel="noopener">📍 Naver 地圖</a></p>
+      </div>
+    </article>
+    <article class="card hotel">
+      <div class="night" style="background:var(--water)"><b>2</b><small>晚</small></div>
+      <div>
+        <h4>Vistacay 世界盃飯店<br><small>Vistacay Hotel World Cup 비스타케이호텔 월드컵</small></h4>
+        <p>📅 12/1（二）– 12/2（三）</p>
+        <p>📍 서귀포시 김정문화로41번길 10-6（63566）。離世界盃體育場約 0.7 km、E-Mart 西歸浦店約 0.4 km，開到偶來市場約 15 分鐘。</p>
+        <p>🛒 附近超市：<a href="https://map.naver.com/p/search/이마트 서귀포점" target="_blank" rel="noopener">E-Mart 西歸浦店（離飯店約 400 公尺，走路就到）</a></p>
+        <p class="area"><span class="pill water">西歸浦</span><a class="map-btn" href="https://map.naver.com/p/search/비스타케이호텔 월드컵" target="_blank" rel="noopener">📍 Naver 地圖</a></p>
+      </div>
+    </article>
+    <article class="card hotel">
+      <div class="night" style="background:var(--bamboo)"><b>1</b><small>晚</small></div>
+      <div>
+        <h4>挾才阿魯米飯店<br><small>Aroomi Hotel Hyupjae 아루미호텔 협재점</small></h4>
+        <p>📅 12/3（四）</p>
+        <p>📍 제주시 한림읍 한림로 545（63012），離挾才海邊約 2 km，可以看夕陽。</p>
+        <p>🛒 附近超市：<a href="https://map.naver.com/p/search/한림농협 하나로마트" target="_blank" rel="noopener">翰林農協 하나로마트（翰林邑市區，開車 5–10 分鐘）</a></p>
+        <p class="area"><span class="pill bamboo">挾才・翰林</span><a class="map-btn" href="https://map.naver.com/p/search/아루미호텔 협재점" target="_blank" rel="noopener">📍 Naver 地圖</a></p>
+      </div>
+    </article>
+  </div>
+  <p style="font-size:13px;margin-top:12px">※ 地址依訂房紀錄。四間都是 15:00 入住、11:00 退房。E-Mart 每月有兩天公休，出發前用 Naver Map 確認。</p>
+</section>
+
+<!-- ========== 待辦清單 ========== -->
+<section id="todo">
+  <h2 class="sec-title">
+    <span class="dot" style="background:var(--bamboo)"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="4" fill="#FFFCF6" stroke="#3E3A39" stroke-width="2"/><path d="M8 9l2 2 4-4M8 15h8" fill="none" stroke="#3E3A39" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+    出發前待辦
+  </h2>
+  <div class="card">
+    <div class="todo-progress">
+      <div class="bar" aria-hidden="true"><i id="bar" class="zero"></i></div>
+      <span id="todo-count">0 / 0</span>
+    </div>
+    <ul class="todo" id="todo-list"></ul>
+  </div>
+</section>
+
+</main>
+
+<footer class="wrap">
+  <svg viewBox="0 0 120 40" aria-hidden="true">
+    <path d="M10 34 Q22 10 44 14 L50 10 L66 10 L72 14 Q96 12 110 34z" fill="#B9DAA5" stroke="#3E3A39" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M50 10 Q58 17 66 10" fill="#FFFCF6" stroke="#3E3A39" stroke-width="3"/>
+  </svg>
+  旅途愉快！營業時間與船班出發前請再確認一次 🍊
+</footer>
+
+<script>
+/* ---------- 每日行程資料 ---------- */
+const T = {car:'🚗 自駕',walk:'👟 步行',boat:'⛴ 渡輪',plane:'✈ 飛機',bus:'🚌 島上巴士／電動車'};
+
+const ICONS = {
+  plane:`<svg viewBox="0 0 60 60"><g class="anim a-float"><path d="M6 32 L44 26 Q54 25 54 32 Q54 39 44 38 L6 32z" fill="#FFFCF6" stroke="#3E3A39" stroke-width="3" stroke-linejoin="round"/><path d="M24 29 L32 14 L38 14 L36 29zM24 35 L32 48 L38 48 L36 35z" fill="#F2A497" stroke="#3E3A39" stroke-width="3" stroke-linejoin="round"/><path d="M8 32 L3 23 L10 23 L15 31z" fill="#F6D27A" stroke="#3E3A39" stroke-width="3" stroke-linejoin="round"/></g></svg>`,
+  forest:`<svg viewBox="0 0 60 60"><g class="anim a-sway"><path d="M30 6 L46 34 L14 34z" fill="#B9DAA5" stroke="#3E3A39" stroke-width="3" stroke-linejoin="round"/><path d="M30 18 L50 48 L10 48z" fill="#B9DAA5" stroke="#3E3A39" stroke-width="3" stroke-linejoin="round"/><rect x="26" y="48" width="8" height="8" fill="#F6D27A" stroke="#3E3A39" stroke-width="3"/></g><circle class="anim a-twinkle" cx="50" cy="12" r="4" fill="#F2A497" stroke="#3E3A39" stroke-width="2.5"/></svg>`,
+  peak:`<svg viewBox="0 0 60 60"><g class="anim a-spin" style="transform-origin:46px 14px"><circle cx="46" cy="14" r="8" fill="#F6D27A" stroke="#3E3A39" stroke-width="3"/></g><path d="M4 46 Q10 24 24 20 L28 18 L36 18 L40 20 Q52 24 56 46z" fill="#B9DAA5" stroke="#3E3A39" stroke-width="3" stroke-linejoin="round"/><path d="M28 18 Q32 23 36 18" fill="#FFFCF6" stroke="#3E3A39" stroke-width="3"/><g class="anim a-bob"><path d="M14 50 L40 50 L36 57 L18 57z" fill="#F2A497" stroke="#3E3A39" stroke-width="3" stroke-linejoin="round"/></g></svg>`,
+  fish:`<svg viewBox="0 0 60 60"><g class="anim a-float"><path d="M8 30 Q24 12 42 30 Q24 48 8 30z" fill="#F2A497" stroke="#3E3A39" stroke-width="3" stroke-linejoin="round"/><path d="M42 30 L54 20 L54 40z" fill="#F6D27A" stroke="#3E3A39" stroke-width="3" stroke-linejoin="round"/><circle cx="18" cy="28" r="2.5" fill="#3E3A39"/></g><circle class="anim a-twinkle" cx="14" cy="12" r="4" fill="#FFFCF6" stroke="#3E3A39" stroke-width="2.5"/><circle class="anim a-twinkle" style="animation-delay:.8s" cx="24" cy="6" r="2.5" fill="#FFFCF6" stroke="#3E3A39" stroke-width="2"/></svg>`,
+  cat:`<svg viewBox="0 0 60 60"><g class="anim a-bob"><path d="M14 22 L16 8 L26 16 L34 16 L44 8 L46 22 Q50 46 30 48 Q10 46 14 22z" fill="#FFFCF6" stroke="#3E3A39" stroke-width="3" stroke-linejoin="round"/><circle cx="23" cy="28" r="2.5" fill="#3E3A39"/><circle cx="37" cy="28" r="2.5" fill="#3E3A39"/><path d="M27 34 q3 3 6 0" fill="none" stroke="#3E3A39" stroke-width="2.5" stroke-linecap="round"/><circle cx="18" cy="35" r="3" fill="#F2A497"/><circle cx="42" cy="35" r="3" fill="#F2A497"/><path d="M8 30h8M8 36h8M44 30h8M44 36h8" stroke="#3E3A39" stroke-width="2" stroke-linecap="round"/></g></svg>`,
+  tea:`<svg viewBox="0 0 60 60"><path d="M10 26 H44 V36 Q44 50 27 50 Q10 50 10 36z" fill="#B9DAA5" stroke="#3E3A39" stroke-width="3" stroke-linejoin="round"/><path d="M44 30 Q54 30 52 38 Q50 44 43 42" fill="none" stroke="#3E3A39" stroke-width="3"/><g class="anim a-float"><path d="M20 20 Q16 14 20 8M28 20 Q24 14 28 8M36 20 Q32 14 36 8" fill="none" stroke="#3E3A39" stroke-width="2.5" stroke-linecap="round"/></g><path d="M6 54 H48" stroke="#3E3A39" stroke-width="3" stroke-linecap="round"/></svg>`,
+  orange:`<svg viewBox="0 0 60 60"><g class="anim a-sway"><circle cx="30" cy="34" r="20" fill="#F6D27A" stroke="#3E3A39" stroke-width="3"/><path d="M30 14 V8" stroke="#3E3A39" stroke-width="3" stroke-linecap="round"/><path d="M30 10 Q42 0 50 6 Q42 16 30 10z" fill="#B9DAA5" stroke="#3E3A39" stroke-width="2.5" stroke-linejoin="round"/><circle cx="23" cy="32" r="2.4" fill="#3E3A39"/><circle cx="37" cy="32" r="2.4" fill="#3E3A39"/><path d="M25 40 q5 4 10 0" fill="none" stroke="#3E3A39" stroke-width="2.5" stroke-linecap="round"/></g></svg>`
+};
+
+const DAYS = [
+  {"d":"D1","date":"11/28","wk":"六","title":"抵達濟州・亂打秀之夜","stay":"三海人觀光飯店","icon":"plane","bg":"var(--coral)","items":[
+    {"t":"10:00","title":"抵達濟州國際機場","q":"제주국제공항","desc":"入境、領行李、取租車，約 1 小時。","tags":["plane"]},
+    {"t":"11:30","title":"午餐（二選一）：姐妹麵條／皇宮盤炸醬麵","q":"자매국수","desc":"①姐妹麵條：豬骨湯肉湯麵（不辣）、砧板豬肉，週三公休。②皇宮盤炸醬麵 황궁쟁반탐라원：11:00–19:00，只收現金、有中文菜單。從機場約 10–15 分鐘。","tags":["car"],"must":true},
+    {"t":"12:30","title":"龍頭岩・龍淵吊橋","q":"용두암","desc":"海邊散步；時間夠可以去梨湖木馬燈塔拍照。","tags":["car","walk"]},
+    {"t":"14:30","title":"三海人飯店入住","q":"삼해인관광호텔","desc":"寄放行李或辦入住，稍微休息。附近新羅免稅店有 mochiron（10:00–19:00）。","tags":["car"]},
+    {"t":"15:45","title":"出發前往亂打秀劇場","q":"난타 제주전용관","desc":"在吾等洞，車程約 15–20 分鐘；開演前 1 小時可換票。","tags":["car"]},
+    {"t":"16:30／17:00","title":"亂打秀 NANTA 濟州劇場","q":"난타 제주전용관","desc":"約 90 分鐘的廚房打擊秀，不懂韓文也能看。各平台場次寫法不同，買票時確認場次。","tags":["car"],"must":true},
+    {"t":"19:00","title":"晚餐（自由選擇）：飯店附近蓮洞・老衡洞","q":"비원 삼계탕 제주","desc":"①秘苑蔘雞湯（清淡）②優等館炭烤肋排 ③牛雅宴 ④pork80 ⑤黃金鰻魚 ⑥緣豬蹄（週二休）⑦星星的店 ⑧Dumb Chicken 炸雞 ⑨梨花辣雞爪（偏辣）。地址・地圖見「美食」頁；飯後可去 Mandarin island（~21:00）。","tags":["car"],"must":true},
+    {"t":"20:30","title":"SPAO 新濟州店（스파오 신광로 42）","q":"스파오 신제주점","desc":"韓國平價服飾品牌，在 Nuwemaru 街一帶、離飯店很近；每天 11:00–22:00，可以退稅。沒時間的話，D7 東門市場旁還有中央路店。","tags":["walk"]}
+  ]},
+  {"d":"D2","date":"11/29","wk":"日","title":"吉卜力展・白狗屋・萬丈窟・月高家","stay":"寶島民宿（城山）","icon":"forest","bg":"var(--bamboo)","items":[
+    {"t":"08:30","title":"退房，往舊左邑松堂","desc":"車程約 40–50 分鐘。","tags":["car"]},
+    {"t":"09:20","title":"濟州童話村＋Studio Ghibli 展","q":"제주동화마을","desc":"吉卜力展就在童話村的童話藝術中心裡，09:00–19:00（18:00 停止入場），成人 22,000 韓元，約 1.5 小時；紀念品店要持票才能進。","tags":["walk"],"must":true},
+    {"t":"11:15","title":"🛍 Jongjong Jeju 종종제주","q":"종종제주","desc":"朝天邑善屹里的選物店，本地韓國人很多；濟州日常主題的設計小物、陶器、木作。每天 10:30–18:00，可以退稅、有停車場。從童話村開過去約 15 分鐘。","tags":["car"],"must":true},
+    {"t":"12:10","title":"🛍 object 오브젝트 제주","q":"오브젝트 제주","desc":"從 Jongjong 開車約 15 分鐘（舊左邑 동복로 87），10:00–18:00。很多濟州限定商品，還能自己 DIY 燙章做吊飾，逛 30–40 分鐘。","tags":["walk"],"must":true},
+    {"t":"12:50","title":"午餐（二選一）：白狗屋／細花排骨","q":"백구옥","desc":"①白狗屋 백구옥（해맞이해안로 1146-4）：海膽飯捲、砧板豬肉、炸物，11:00–16:00，賣完提早關。②細花排骨 세화갈비 本店（구좌로 39，細花海邊旁，開車約 5 分鐘）。從 object 開車約 15 分鐘。","tags":["car"],"must":true},
+    {"t":"14:00","title":"史努比庭園 Snoopy Garden","q":"스누피가든","desc":"從白狗屋開車約 15 分鐘；冬季 09:00–18:00、全年無休。留 1 小時 45 分左右，15:45 前離開去萬丈窟。","tags":["car"],"must":true},
+    {"t":"16:00","title":"🏯 萬丈窟 만장굴","q":"만장굴","desc":"世界自然遺產熔岩洞，2026/5/30 整修後重新開放，約 1 km 木棧道好走。09:00–18:00（約 17:10 停止入場），每月第一個週三公休；成人 4,000 韓元。洞內涼要帶外套，來回約 50 分鐘；從史努比庭園開車約 15 分鐘。","tags":["car","walk"],"must":true},
+    {"t":"17:00","title":"🛍 Mongle 몽그레 月汀里店","q":"몽그레 월정리점","desc":"萬丈窟開車約 10 分鐘（해맞이해안로 400），約到 18:00。招牌雲朵造型濟州大麥夾心餅乾，樓上有海景拍照點。","tags":["car"],"must":true},
+    {"t":"17:45","title":"晚餐：月高家 월고집 月汀里本店","q":"월고집 월정리본점","desc":"Mongle 附近（월정1길 16-1）的海景黑豬肉，店員代烤；黑豬近古基 600g 約 66,000 韓元，另有泡菜鍋、大醬湯。有停車場，21:00 最後點餐。","tags":["walk"],"must":true},
+    {"t":"19:15","title":"前往城山，入住寶島民宿","q":"보물섬펜션","desc":"沿東北海岸開約 30 分鐘，22:00 前入住免先聯絡。","tags":["car"]}
+  ]},
+  {"d":"D3","date":"11/30","wk":"一","title":"城山日出峰・牛島","stay":"寶島民宿（城山）","icon":"peak","bg":"var(--yellow)","items":[
+    {"t":"06:30","title":"城山日出峰看日出（選擇）","q":"성산일출봉","desc":"11–12 月 06:00–18:00，日出約 7:20，登頂約 30–40 分鐘，成人 5,000 韓元。每月第一個週一公休，11/30 不受影響。","tags":["car","walk"],"must":true},
+    {"t":"08:30","title":"早餐","q":"시흥해녀의집","desc":"始興海女之家的鮑魚粥（07:00 開）；或去美味食堂抽號吃燉白帶魚（偏辣）。下山順路逛日出峰前的「安寧城山」小物店。","tags":["car"]},
+    {"t":"09:30","title":"城山港搭船去牛島","q":"성산포항종합여객터미널","desc":"約 15 分鐘，30 分鐘一班，冬季末班約 17:00。只能現場買票，要帶護照、填寫乘船申報單；租車不能上島。","tags":["boat"],"must":true},
+    {"t":"10:00","title":"牛島環島","q":"우도","desc":"西濱白沙、牛島峰、下高水洞海邊，吃花生冰淇淋。島上搭觀光巴士或租電動車。","tags":["bus"],"must":true},
+    {"t":"12:00","title":"牛島午餐：炸豬排／炸醬麵","q":"온오프 우도","desc":"兩家相距約 3 公里，兩個家庭可以各選一家，或一家正餐、一家分著吃。①On-Off 온오프（우도해안길 876，下古水洞海邊旁）：海景黑豬炸豬排，11:00–16:00，賣完提早收。②牛島炸醬麵 우도짜장맨（黑沙海水浴場 검멀레 附近）：炸醬麵、海鮮炒碼麵、糖醋肉；炒碼麵偏辣。船停駛的日子店家也休息。","tags":["walk"],"must":true},
+    {"t":"15:00","title":"搭船回城山","q":"우도 천진항","desc":"風大可能停駛，出發前打給碼頭確認（064-782-5671）。","tags":["boat"]},
+    {"t":"15:30","title":"光峙其海邊・涉地可支","q":"광치기해변","desc":"海岸散步；沒看日出的話，這時去爬日出峰（16:30 前到售票處）。","tags":["car","walk"]},
+    {"t":"16:30","title":"🛍 Filmlog 필름로그 濟州店","q":"필름로그 제주","desc":"城山的底片相機店（성산읍 수시로10번길 3），約 13:00–18:00，週二、週三公休，所以排在週一。門口有底片相機自動販賣機，買一台記錄旅程。","tags":["car"],"must":true},
+    {"t":"18:00","title":"城山晚餐","q":"복자씨연탄구이 성산본점","desc":"福子氏煤炭烤肉（복자씨연탄구이）海景黑豬肉，吃完來碗冷蘿蔔泡菜麵；續住寶島民宿。","tags":["car"]}
+  ]},
+  {"d":"D4","date":"12/1","wk":"二","title":"水上星球 → 城邑民俗村 → 西歸浦","stay":"Vistacay 世界盃飯店（西歸浦）","icon":"fish","bg":"var(--water)","items":[
+    {"t":"09:00","title":"退房，前往涉地可支","desc":"車程約 10 分鐘。","tags":["car"]},
+    {"t":"09:30","title":"水上星球 Aqua Planet Jeju","q":"아쿠아플라넷 제주","desc":"韓國最大水族館，09:30–18:00。海洋劇場表演之前的場次約 10:50、12:50、14:50、16:20，以現場公告為準。","tags":["walk"],"must":true},
+    {"t":"12:30","title":"午餐：城邑一帶","desc":"往城邑民俗村方向吃，村子周邊有黑豬肉、蕎麥麵等鄉土料理小店。","tags":["car"]},
+    {"t":"13:30","title":"🏯 城邑民俗村 성읍민속마을","q":"성읍민속마을","desc":"朝鮮時代旌義縣的縣城（1423 年遷到這裡），保留茅草屋、黑石牆、石爺爺和數百年的老樹，居民到現在還住在裡面。免費參觀、免費停車；入口可以申請免費的文化解說，約 40 分鐘。從水上星球開車約 25 分鐘。","tags":["car","walk"],"must":true},
+    {"t":"14:40","title":"往西歸浦","desc":"約 50 分鐘，途中可以停表善海邊。","tags":["car"]},
+    {"t":"15:40","title":"正房瀑布","q":"정방폭포","desc":"直接落入海中的瀑布。","tags":["car","walk"]},
+    {"t":"16:40","title":"入住 Vistacay 世界盃飯店","q":"비스타케이호텔 월드컵","desc":"在世界盃體育場旁，開到偶來市場約 15 分鐘。","tags":["car"]},
+    {"t":"18:00","title":"每日偶來市場・李仲燮街","q":"서귀포매일올레시장","desc":"市場冬季營業到 20:00。晚餐推薦黑豬肉BBQ（16:30 開）或南妹家王帶魚（有烤白帶魚、一人份）。李仲燮街有小工坊可逛。想吃炸雞的話，可以外帶옛날통닭（신서귀로 39，招牌炸雞皮）回飯店。","tags":["car","walk"]}
+  ]},
+  {"d":"D5","date":"12/2","wk":"三","title":"Dolcori・秋史館・分頭走","stay":"Vistacay 世界盃飯店（西歸浦）","icon":"cat","bg":"var(--coral)","items":[
+    {"t":"09:30","title":"出發往安德面","desc":"車程約 30–40 分鐘。","tags":["car"]},
+    {"t":"10:00","title":"Dolcori Forest 돌코리숲","q":"돌코리숲","desc":"2026 年 4 月開幕的石貓主題園區，10:00–18:00（17:00 停止入場）。戶外迷你火車最熱門，一進場先買火車票。","tags":["walk"],"must":true},
+    {"t":"12:30","title":"午餐（自由選擇）：摹瑟浦","q":"모슬포항","desc":"①느영나영갈비탕 排骨湯專門店（하모항구로6번길 24，賞海豚的海岸附近）②摹瑟浦港一帶海鮮、烤魚。開車約 20 分鐘。","tags":["car"]},
+    {"t":"13:40","title":"🏯 濟州秋史館 제주 추사관","q":"제주추사관","desc":"秋史金正喜流放濟州 8 年多之地，在此完成秋史體與〈歲寒圖〉；展館由承孝相設計。週一休館，約 09:00–17:30，免費入場（以現場為準），約 45 分鐘。","tags":["car","walk"],"must":true},
+    {"t":"14:40","title":"🎀 分頭走①：Hello Kitty Island（Kitty 組）","q":"헬로키티아일랜드","desc":"兩台車在秋史館分頭出發，Kitty 組開車約 20 分鐘。09:00–18:00（17:00 停止入場），每天開放；3 層樓加屋頂花園，約 2–3 小時。","tags":["car"],"must":true},
+    {"t":"14:40","title":"✈️ 分頭走②：濟州航空宇宙博物館（小男生組）","q":"제주항공우주박물관","desc":"小男生組從秋史館直接開過去，約 15 分鐘。亞洲最大的航空宇宙博物館，有 39 架真飛機和天文宇宙館；09:00–18:00（17:00 停止入場）。","tags":["car","walk"],"must":true},
+    {"t":"17:00","title":"各自回西歸浦，晚餐會合","q":"서귀포매일올레시장","desc":"兩組各自開回西歸浦，晚餐在偶來市場一帶會合；或外帶옛날통닭（신서귀로 39，招牌炸雞皮）。順路可停大浦柱狀節理帶，入口附近有現榨橘子汁（이어도로 36-24）。","tags":["car"]}
+  ]},
+  {"d":"D6","date":"12/3","wk":"四","title":"綠茶博物館・9.81 Park・ARTE MUSEUM → 挾才","stay":"挾才阿魯米飯店","icon":"tea","bg":"var(--bamboo)","items":[
+    {"t":"09:00","title":"退房，往西廣茶園","desc":"車程約 40 分鐘。","tags":["car"]},
+    {"t":"09:40","title":"O'sulloc 綠茶博物館","q":"오설록 티뮤지엄","desc":"冬季 09:00–18:00，免費入場、免費停車。必吃綠茶霜淇淋；「抹茶站」可試喝現磨抹茶，隔壁是 Innisfree 濟州之家。","tags":["walk"],"must":true},
+    {"t":"11:15","title":"午餐：Tea Terrace","q":"오설록 티뮤지엄","desc":"抹茶拌麵、抹茶拌飯，在博物館裡吃，省下移動時間。","tags":["walk"]},
+    {"t":"12:30","title":"開往涯月","desc":"車程約 40 分鐘。","tags":["car"]},
+    {"t":"13:15","title":"9.81 Park 重力賽車","q":"9.81파크 제주","desc":"09:00–18:00，最後報到 17:40。穿包鞋或平底鞋，先下載 App 綁定票券；天候不佳時戶外項目可能暫停。","tags":["car"],"must":true},
+    {"t":"15:30","title":"ARTE MUSEUM 濟州","q":"아르떼뮤지엄 제주","desc":"沉浸式媒體藝術館，有瀑布、花園、海浪、星空等十幾個展區；跟 9.81 Park 同在涯月，車程約 10–15 分鐘。每天 10:00–20:00（19:00 停止入場），成人約 18,000 韓元，可加購 Tea Bar 茶飲。","tags":["car"],"must":true},
+    {"t":"17:00","title":"挾才海邊看夕陽","q":"협재해수욕장","desc":"12 月初日落約 17:20，車程約 20–25 分鐘。想從容看夕陽，可以先看夕陽再回 ARTE MUSEUM（19:00 前入場）。","tags":["car","walk"]},
+    {"t":"18:00","title":"入住挾才阿魯米飯店・晚餐","q":"아루미호텔 협재점","desc":"推薦「拉麵的先生包餃子的太太」韓牛水煮肉餃子火鍋（16:00–17:00 休息）。","tags":["car"]}
+  ]},
+  {"d":"D7","date":"12/4","wk":"五","title":"挾才 → 涯月 → 舊城歷史散步 → 回家","stay":"回程 IT633","icon":"orange","bg":"var(--yellow)","items":[
+    {"t":"09:00","title":"挾才・金陵海邊晨間散步","q":"협재해수욕장","desc":"先到挾才秀烏龍門口登記排隊；天氣好可以看到飛揚島。","tags":["walk"]},
+    {"t":"10:20","title":"退房，往涯月鳳城里","desc":"車程約 20–25 分鐘。","tags":["car"]},
+    {"t":"11:00","title":"🛍 Mumu Jeju 무무제주","q":"무무제주","desc":"專賣橘子周邊的小店（애월읍 봉성로3길 11），文具、吊飾、手機周邊都有，整間超可愛。11:00–18:00，週三、週四公休，所以排在週五。","tags":["car"],"must":true},
+    {"t":"12:10","title":"🏯 項坡頭里抗蒙遺址 항파두리 항몽유적지","q":"항파두리 항몽유적지","desc":"高麗三別抄抵抗蒙古的最後據點（1271–1273 年），留有土城、紀念碑和展示館。免費、全年無休，09:00–18:00。從 Mumu 開車約 15 分鐘，順著土城走一小段約 30 分鐘，順路往市區。","tags":["car","walk"]},
+    {"t":"13:10","title":"東門市場午餐＆伴手禮","q":"동문재래시장","desc":"車程約 30 分鐘。買橘子、巧克力、海苔。","tags":["car","walk"],"must":true},
+    {"t":"14:10","title":"🏯 濟州牧官衙・觀德亭","q":"제주목 관아","desc":"朝鮮時代治理濟州的官府，2002 年依古籍和考古成果復原；門口的觀德亭建於 1448 年，是國家寶物。09:00–18:00、全年無休，成人 1,500 韓元。從東門市場走路約 10 分鐘，The Islander 就在旁邊。","tags":["walk"],"must":true},
+    {"t":"15:00","title":"🛍 舊城文創小店散步","q":"더 아일랜더 제주","desc":"走路串起來：The Islander（관덕로4길 7，10:30–19:00，濟州限定香水、旅行香皂）、playworks（산지로 47 三樓，12:00–18:30，自家插畫商品、濟州限定護照套和明信片）、misomiso、hogg。沒逛到 SPAO 的話，中央路店也在附近。時間夠的話，再去機場附近的樂天或新羅免稅店。","tags":["walk"],"must":true},
+    {"t":"16:30","title":"加油・還車","desc":"","tags":["car"]},
+    {"t":"17:30","title":"抵達濟州機場報到","q":"제주국제공항","desc":"","tags":["plane"]},
+    {"t":"19:50","title":"IT633 起飛 → 21:05 抵達台中","desc":"回家囉！","tags":["plane"]}
+  ]}
+];
+
+/* ---------- 每日行程畫面 ---------- */
+const tabsEl = document.getElementById('tabs');
+const panel = document.getElementById('day-panel');
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+DAYS.forEach((day, i) => {
+  const b = document.createElement('button');
+  b.className = 'tab';
+  b.type = 'button';
+  b.role = 'tab';
+  b.id = 'tab-' + i;
+  b.setAttribute('role','tab');
+  b.setAttribute('aria-controls','day-panel');
+  b.innerHTML = `<b>${day.d}</b><small>${day.date}（${day.wk}）</small>`;
+  b.addEventListener('click', () => selectDay(i, true));
+  b.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+      e.preventDefault();
+      const n = (i + (e.key === 'ArrowRight' ? 1 : -1) + DAYS.length) % DAYS.length;
+      selectDay(n, true);
+      document.getElementById('tab-' + n).focus();
+    }
+  });
+  tabsEl.appendChild(b);
+});
+
+const NAVER = q => 'https://map.naver.com/p/search/' + encodeURIComponent(q);
+function mapLink(q){
+  return `<a class="map-btn" href="${NAVER(q)}" target="_blank" rel="noopener" aria-label="在 Naver Map 開啟：${esc(q)}">📍 Naver 地圖</a>`;
+}
+
+function renderDay(day){
+  const items = day.items.map((it, k) => `
+    <li class="tl-item${it.must ? ' must' : ''} bounce" style="animation-delay:${80 + k * 60}ms">
+      <span class="tl-dot" aria-hidden="true">${it.must ? '★' : k + 1}</span>
+      <div class="tl-card">
+        <span class="tl-time">${esc(it.t)}</span>
+        <div class="tl-title">${esc(it.title)}${it.must ? '<span class="must-badge">★ 必去</span>' : ''}</div>
+        ${it.desc ? `<p class="tl-desc">${esc(it.desc)}</p>` : ''}
+        <div class="tags">${it.tags.map(t => `<span class="tag ${t}">${T[t]}</span>`).join('')}${it.q ? mapLink(it.q) : ''}</div>
+      </div>
+    </li>`).join('');
+  return `
+    <div class="day-head bounce">
+      <div class="day-icon" style="background:${day.bg}" aria-hidden="true">${ICONS[day.icon]}</div>
+      <div>
+        <h3>${day.d}・${day.date}（${day.wk}）<br>${esc(day.title)}</h3>
+        <span class="stay pill">🛏 ${esc(day.stay)}</span>
+      </div>
+    </div>
+    <ol class="timeline">${items}</ol>`;
+}
+
+function selectDay(i, userAction){
+  [...tabsEl.children].forEach((b, k) => {
+    b.setAttribute('aria-selected', k === i ? 'true' : 'false');
+    b.tabIndex = k === i ? 0 : -1;
+  });
+  panel.setAttribute('aria-labelledby', 'tab-' + i);
+  panel.innerHTML = renderDay(DAYS[i]);
+  if (userAction) {
+    const t = document.getElementById('tab-' + i);
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    t.scrollIntoView({block:'nearest', inline:'center', behavior: reduce ? 'auto' : 'smooth'});
+  }
+}
+
+/* 旅途中自動打開當天 */
+(function initDay(){
+  const now = new Date();
+  const start = new Date('2026-11-28T00:00:00+09:00');
+  const idx = Math.floor((now - start) / 86400000);
+  selectDay(idx >= 0 && idx < DAYS.length ? idx : 0, false);
+})();
+
+/* ---------- 出發倒數 ---------- */
+const DEPART = new Date('2026-11-28T07:00:00+08:00').getTime();
+const RETURN = new Date('2026-12-04T21:05:00+08:00').getTime();
+const pad = n => String(n).padStart(2, '0');
+function tick(){
+  const now = Date.now();
+  const label = document.getElementById('cd-label');
+  let diff = DEPART - now;
+  if (diff <= 0) {
+    if (now < RETURN) {
+      const day = Math.min(7, Math.floor((now - DEPART) / 86400000) + 1);
+      label.textContent = `旅途中・第 ${day} 天，好好玩！`;
+    } else {
+      label.textContent = '旅程結束，歡迎回家 🍊';
+    }
+    diff = 0;
+  } else {
+    label.textContent = '距離 IT632 起飛還有';
+  }
+  const s = Math.floor(diff / 1000);
+  document.getElementById('cd-d').textContent = Math.floor(s / 86400);
+  document.getElementById('cd-h').textContent = pad(Math.floor(s % 86400 / 3600));
+  document.getElementById('cd-m').textContent = pad(Math.floor(s % 3600 / 60));
+  document.getElementById('cd-s').textContent = pad(s % 60);
+}
+tick();
+setInterval(tick, 1000);
+
+/* ---------- 待辦清單 ---------- */
+/* FOOD-JS-START */
+const FOODS = [["濟州市・蓮洞（D1）",[["姐妹麵條 자매국수","자매국수","約 09:00–18:00，週三公休","肉湯麵（고기국수，不辣）、砧板豬肉"],["秘苑蔘雞湯 비원 삼계탕","비원 삼계탕 제주","約 10:00–22:00（舊資料）","1968 年老店，清淡人蔘雞湯"],["皇宮盤炸醬麵 황궁쟁반탐라원","황궁쟁반탐라원","11:00–19:00，只收現金","大盤炸醬麵，有中文菜單"]]],["蓮洞・老衡洞（D1 晚餐自由選）",[["黃金鰻魚 황금장어","제주 제주시 노형동 937-11","晚餐，出發前確認","烤鰻魚；地址：노형동 937-11"],["優等館 우등관 炭烤肋排","제주 제주시 다랑곶6길 52","晚餐，出發前確認","炭烤肋排；地址：다랑곶6길 52 1층"],["Dumb Chicken 덤브치킨","제주 제주시 남녕로 32","晚餐・宵夜，出發前確認","韓式炸雞，可外帶；地址：남녕로 32 1층"],["梨花辣雞爪 이화닭발1979 本店","제주 제주시 신대로14길 42","晚餐・宵夜，出發前確認","辣雞爪（偏辣）；地址：신대로14길 42"],["牛雅宴","제주 제주시 원노형4길 7","12:00–24:00","烤牛肉；地址：원노형4길 7"],["pork80","제주 제주시 노연로 37-1","11:30–23:30","烤豬肉；地址：노연로 37-1"],["緣豬蹄","제주 제주시 원노형3길 14","13:00–23:00，週二休","豬腳；地址：원노형3길 14"],["星星的店 제주별이상회","제주 제주시 제원길 38","11:00–23:00","地址：제원길 38 1층"]]],["老衡洞・飯後逛逛（D1）",[["mochiron（新羅免稅店）","제주 제주시 노연로 69","10:00–19:00","在新羅免稅店；D1 入住飯店前後順路"],["Mandarin island","제주 제주시 노연로 54","14:00–21:00，週四休","地址：노연로 54 1층；晚餐後可去"]]],["東北岸・月汀里（D2）",[["白狗屋 백구옥","백구옥","11:00–16:00（15:30 最後點餐）","百年老屋，海膽飯捲、砧板豬肉、炸物"],["細花排骨 세화갈비 本店","제주 제주시 구좌로 39","午餐，出發前確認","細花海邊旁的排骨店；白狗屋的替代選擇"],["月高家 월고집 月汀里本店","월고집 월정리본점","晚餐，21:00 最後點餐","海景黑豬近古基，店員代烤"]]],["牛島・城山（D3）",[["On-Off 온오프（炸豬排）","온오프 우도","11:00–16:00，賣完提早收","海景黑豬炸豬排"],["牛島炸醬麵 우도짜장맨","우도짜장맨","午餐（船停駛時休息）","炸醬麵、海鮮炒碼麵（偏辣）、糖醋肉"],["福子氏煤炭烤肉 복자씨연탄구이","복자씨연탄구이 성산본점","晚餐，離日出峰約 3 分鐘","海景黑豬肉＋冷蘿蔔泡菜麵"]]],["西歸浦（D4–D5 晚餐）",[["黑豬肉BBQ 흑돼지BBQ","서귀포시 태평로353번길 7","16:30–23:00（22:00 最後點餐）","備長炭烤一級黑豬，小菜豐富"],["南妹家王帶魚 남매네왕갈치","남매네 왕갈치 서귀포","09:00–20:00，有一人份","燉帶魚、烤帶魚（不吃辣點烤的）"],["옛날통닭（炸雞皮）","제주 서귀포시 신서귀로 39","出發前確認，可外帶","秋瓷炫同款炸雞皮；地址：신서귀로 39"]]],["摹瑟浦・中文（D5）",[["느영나영갈비탕 排骨湯","제주 서귀포시 하모항구로6번길 24","午餐，出發前確認","排骨湯專門店，在賞海豚的海岸附近"],["大浦柱狀節理 現榨橘子汁","제주 서귀포시 이어도로 36-24","白天，出發前確認","柱狀節理帶門口的橘子榨汁"],["每日偶來市場小吃","서귀포매일올레시장","冬季 07:00–20:00","黑豬肉蔬菜捲、橘子大福、生魚片外帶"]]],["挾才・翰林（D6–D7）",[["挾才秀烏龍 협재 수우동","협재 수우동","早上現場登記排隊","冷烏龍麵＋半熟蛋天婦羅，窗外是飛揚島"],["拉麵的先生包餃子的太太","면 뽑는 선생 만두 빚는 아내 협재","10:30–20:30（16:00–17:00 休息）","韓牛水煮肉餃子火鍋（不辣）"],["O'sulloc Tea Terrace","오설록 티뮤지엄","09:00–18:00","抹茶拌麵、抹茶拌飯、綠茶霜淇淋"]]]];
+(function(){
+  const el=document.getElementById('food-list');
+  FOODS.forEach(([area,items])=>{
+    const d=document.createElement('details');d.className='card food-area';
+    d.innerHTML='<summary><span>'+esc(area)+'<small>'+items.length+' 家</small></span></summary><div class="food-items">'+
+      items.map(([n,q,t,s])=>'<div class="food-item"><h4>'+esc(n)+'</h4><p>🕒 '+esc(t)+'</p><p>🍽 '+esc(s)+'</p><a class="map-btn" href="'+NAVER(q)+'" target="_blank" rel="noopener">📍 Naver 地圖</a></div>').join('')+'</div>';
+    el.appendChild(d);
+  });
+})();
+/* FOOD-JS-END */
+const TODOS = [
+  ['確認四間住宿的入住時間','都是 15:00 入住、11:00 退房；寶島民宿 22:00 後入住要先聯絡'],
+  ['預訂亂打秀門票，確認場次','16:30 或 17:00'],
+  ['預訂景點門票','吉卜力展、史努比庭園、水上星球、Dolcori、Hello Kitty、9.81 Park、ARTE MUSEUM（KKday、Klook、Trip.com 常有折扣）'],
+  ['租車＋申請國際駕照','帶台灣駕照正本與護照'],
+  ['牛島要帶護照','船票只能現場買，填寫乘船申報單'],
+  ['下載 Naver Map 或 Kakao Map','在韓國用 Google Maps 導航不準'],
+  ['下載 Tabling App','熱門烤肉店可以先抽號'],
+  ['換韓元／準備海外刷卡','市場小攤多用現金'],
+  ['買 eSIM 或網卡',''],
+  ['準備保暖衣物','防風外套、毛帽、手套、好走的運動鞋'],
+  ['出發前查天氣與牛島船班','風大可能停駛']
+];
+const KEY = 'jeju-trip-todo-2026';
+let saved = {};
+try { saved = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) { saved = {}; }
+const listEl = document.getElementById('todo-list');
+const check = `<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5" fill="none" stroke="#3E3A39" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+TODOS.forEach(([txt, note], i) => {
+  const li = document.createElement('li');
+  li.innerHTML = `<input type="checkbox" id="td-${i}"${saved[i] ? ' checked' : ''}>
+    <label for="td-${i}"><span class="box">${check}</span><span class="txt">${esc(txt)}${note ? `<small>${esc(note)}</small>` : ''}</span></label>`;
+  li.querySelector('input').addEventListener('change', e => {
+    saved[i] = e.target.checked;
+    try { localStorage.setItem(KEY, JSON.stringify(saved)); } catch (err) {}
+    updateProgress();
+  });
+  listEl.appendChild(li);
+});
+function updateProgress(){
+  const total = TODOS.length;
+  const done = listEl.querySelectorAll('input:checked').length;
+  const bar = document.getElementById('bar');
+  bar.style.width = (done / total * 100) + '%';
+  bar.classList.toggle('zero', done === 0);
+  document.getElementById('todo-count').textContent = `${done} / ${total}`;
+}
+updateProgress();
+</script>
+</body>
+</html>
