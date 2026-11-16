@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="default" />
 <meta name="theme-color" content="#F8EED3" />
-<meta name="apple-mobile-web-app-title" content="濟州旅行" />
+<meta name="apple-mobile-web-app-title" content="JEJU" />
 <link rel="apple-touch-icon" href="icon.png" />
 <link rel="icon" type="image/png" href="icon.png" />
 <link rel="manifest" href="manifest.webmanifest" />
@@ -178,6 +178,16 @@
             <span v-html="icon('bed','w-3.5 h-3.5')"></span>{{ hotelTonight(curDate).short }}
           </span>
         </div>
+        <div class="px-5 mt-3">
+          <button @click="nearbyMatjip" class="w-full flex items-center gap-3 px-4 py-3 rounded-[20px] bg-[#03C75A] text-white press shadow-[0_10px_20px_-12px_rgba(3,150,70,.8)]">
+            <span class="w-9 h-9 rounded-full bg-white/20 grid place-items-center" v-html="icon('food','w-5 h-5')"></span>
+            <span class="text-left flex-1">
+              <span class="block font-maru font-bold text-[15px]">我附近的 맛집</span>
+              <span class="block text-[11px] opacity-90">{{ locating ? '定位中…' : '用目前位置在 Naver Map 找在地餐廳' }}</span>
+            </span>
+            <span v-html="icon('nav','w-4 h-4')"></span>
+          </button>
+        </div>
 
         <!-- 天氣資訊 -->
         <div class="px-5 mt-3">
@@ -288,6 +298,21 @@
                     <p v-if="item.cat==='景點' && item.ticket" class="flex gap-1.5"><span class="shrink-0">門票</span><span class="text-ink/80">{{ item.ticket }}</span></p>
                     <p v-if="item.note" class="leading-relaxed whitespace-pre-line text-ink/70">{{ item.note }}</p>
                   </div>
+                  <a v-if="item.link" :href="item.link.url" target="_blank" rel="noopener" @click.stop
+                     class="mt-2.5 mr-1.5 inline-flex items-center gap-1.5 pl-2 pr-3 py-1.5 rounded-full bg-[#E6F1F4] text-[#4F8597] text-[12px] font-bold press">
+                    <span class="w-5 h-5 rounded-full bg-[#6FA7B8] text-white grid place-items-center" v-html="icon('ferry','w-3 h-3')"></span>
+                    {{ item.link.label }}
+                  </a>
+                  <button v-if="item.cat === '美食'" @click.stop="openMatjip(regionOf(item))"
+                          class="mt-2.5 inline-flex items-center gap-1.5 pl-2 pr-3 py-1.5 rounded-full bg-[#FFF1CC] text-amber text-[12px] font-bold press">
+                    <span class="w-5 h-5 rounded-full bg-[#03C75A] text-white grid place-items-center" v-html="icon('food','w-3 h-3')"></span>
+                    搜尋{{ regionOf(item).zh }}附近 맛집
+                  </button>
+                  <button v-if="item.cat === '美食'" @click.stop="openCatchtable(item)"
+                          class="mt-2.5 inline-flex items-center gap-1.5 pl-2 pr-3 py-1.5 rounded-full bg-[#FBE9E5] text-[#D0705E] text-[12px] font-bold press">
+                    <span class="w-5 h-5 rounded-full bg-[#E2614E] text-white grid place-items-center font-maru text-[10px] font-bold">C</span>
+                    CATCHTABLE 訂位
+                  </button>
                 </div>
                 <div class="flex flex-col items-center justify-between py-3 pr-3 gap-2">
                   <button @click.stop="editItem(item)" class="w-8 h-8 rounded-full bg-cream text-sub grid place-items-center press" v-html="icon('edit','w-4 h-4')"></button>
@@ -808,11 +833,12 @@ const DEFAULT_DAYS = {
     P('購物','17:00','Mongle 몽그레 月汀里店 ★必去','몽그레 월정리점', 33.5560, 126.7960, { hours:'約到 18:00', note:'招牌雲朵造型濟州大麥夾心餅乾，樓上有海景拍照點' }),
     P('美食','17:45','晚餐：月高家 월고집 月汀里本店 ★必去','월고집 월정리본점', 33.5575, 126.7985, { hours:'21:00 最後點餐', note:'海景黑豬肉，店員代烤；黑豬近古基 600g 約 ₩66,000\n另有泡菜鍋、大醬湯，有停車場' }),
     P('住宿','19:15','入住 寶島民宿','보물섬펜션', 33.4690, 126.9310, { hours:'22:00 前入住免先聯絡', note:'沿東北海岸開約 30 分鐘' }),
+    P('其他','21:00','⛴ 查詢明天牛島渡輪是否開船','보물섬펜션', 33.4690, 126.9310, { link: { label:'城山此刻：查渡輪是否開船', url:'https://chengshan.kr/zh-hant' }, note:'點下方按鈕開「城山此刻」，看牛島渡輪運航狀態與城山天氣\n明早出發前再看一次，確認當天真的有開船' }),
   ],
   '2026-11-30': [
     P('景點','06:30','城山日出峰看日出（選擇）★必去','성산일출봉', 33.4581, 126.9425, { hours:'11–12 月 06:00–18:00', ticket:'成人 ₩5,000', note:'日出約 7:20，登頂約 30–40 分鐘' }),
     P('美食','08:30','早餐：始興海女之家','시흥해녀의집', 33.4880, 126.9080, { hours:'07:00 開', note:'鮑魚粥；或去美味食堂抽號吃燉白帶魚（偏辣）\n順路逛日出峰前的「安寧城山」小物店' }),
-    P('其他','09:30','城山港 搭船去牛島 ★必去','성산포항종합여객터미널', 33.4735, 126.9340, { note:'約 15 分鐘、30 分鐘一班，冬季末班約 17:00\n只能現場買票，要帶護照、填乘船申報單；租車不能上島' }),
+    P('其他','09:30','城山港 搭船去牛島 ★必去','성산포항종합여객터미널', 33.4735, 126.9340, { note:'約 15 分鐘、30 分鐘一班，冬季末班約 17:00\n只能現場買票，要帶護照、填乘船申報單；租車不能上島', link: { label:'城山此刻：查渡輪是否開船', url:'https://chengshan.kr/zh-hant' } }),
     P('景點','10:00','牛島環島 ★必去','우도', 33.5050, 126.9520, { segFixed:'渡輪 約 15 分', note:'西濱白沙、牛島峰、下高水洞海邊，吃花生冰淇淋\n島上搭觀光巴士或租電動車' }),
     P('美食','12:00','牛島午餐：炸豬排／炸醬麵 ★必去','온오프 우도', 33.5150, 126.9620, { hours:'On-Off 11:00–16:00，賣完提早收', note:'① On-Off 온오프：海景黑豬炸豬排（下古水洞海邊旁）\n② 牛島炸醬麵 우도짜장맨：炸醬麵、炒碼麵（偏辣）、糖醋肉\n兩家相距約 3 km，可分頭吃' }),
     P('其他','15:00','搭船回城山','우도 천진항', 33.4970, 126.9530, { note:'風大可能停駛，出發前打給碼頭確認 064-782-5671' }),
@@ -971,6 +997,17 @@ createApp({
 
     const days = reactive(saved?.days || clone(DEFAULT_DAYS));
     DATES.forEach(d => { if (!days[d]) days[d] = []; });
+    // 舊資料補上新功能（不會動到你自己新增或修改的內容）
+    (function migrate() {
+      const FERRY_URL = 'https://chengshan.kr/zh-hant';
+      const d29 = days['2026-11-29'];
+      if (d29 && !d29.some(i => i.link?.url === FERRY_URL)) {
+        const def = DEFAULT_DAYS['2026-11-29'].find(i => i.link?.url === FERRY_URL);
+        if (def) d29.push(clone(def));
+      }
+      const port = (days['2026-11-30'] || []).find(i => i.name.includes('城山港'));
+      if (port && !port.link) port.link = { label:'城山此刻：查渡輪是否開船', url: FERRY_URL };
+    })();
     const shopping = reactive(saved?.shopping || []);
     const expenses = reactive(saved?.expenses || []);
     const info = reactive(saved?.info || clone(DEFAULT_INFO));
@@ -1067,6 +1104,72 @@ createApp({
     watch(catFilter, () => nextTick(initSortable));
 
     /* ---------- Naver Map ---------- */
+    /* ---------- 맛집 搜尋 ---------- */
+    const REGIONS = [
+      { ko:'제주시 연동', zh:'蓮洞', lat:33.4880, lng:126.4930 },
+      { ko:'제주시 노형동', zh:'老衡洞', lat:33.4830, lng:126.4780 },
+      { ko:'제주 용담동', zh:'龍潭洞', lat:33.5130, lng:126.5100 },
+      { ko:'제주 동문시장', zh:'東門市場', lat:33.5122, lng:126.5263 },
+      { ko:'제주시 오등동', zh:'吾等洞', lat:33.4720, lng:126.5450 },
+      { ko:'조천읍 선흘리', zh:'善屹里', lat:33.5100, lng:126.7100 },
+      { ko:'구좌읍 송당리', zh:'松堂', lat:33.4630, lng:126.7700 },
+      { ko:'구좌읍 평대리', zh:'坪岱', lat:33.5320, lng:126.8380 },
+      { ko:'구좌읍 월정리', zh:'月汀里', lat:33.5560, lng:126.7960 },
+      { ko:'구좌읍 김녕리', zh:'金寧', lat:33.5560, lng:126.7560 },
+      { ko:'함덕', zh:'咸德', lat:33.5430, lng:126.6690 },
+      { ko:'성산읍 성산리', zh:'城山', lat:33.4620, lng:126.9330 },
+      { ko:'성산읍 시흥리', zh:'始興里', lat:33.4880, lng:126.9080 },
+      { ko:'성산읍 고성리', zh:'涉地可支', lat:33.4400, lng:126.9150 },
+      { ko:'우도', zh:'牛島', lat:33.5050, lng:126.9520 },
+      { ko:'표선면 성읍리', zh:'城邑', lat:33.3880, lng:126.8000 },
+      { ko:'표선', zh:'表善', lat:33.3260, lng:126.8350 },
+      { ko:'서귀포 올레시장', zh:'西歸浦市區', lat:33.2490, lng:126.5630 },
+      { ko:'서귀포 월드컵경기장', zh:'世界盃體育場', lat:33.2470, lng:126.5100 },
+      { ko:'중문', zh:'中文', lat:33.2500, lng:126.4120 },
+      { ko:'안덕면', zh:'安德', lat:33.2880, lng:126.3600 },
+      { ko:'모슬포', zh:'摹瑟浦', lat:33.2160, lng:126.2510 },
+      { ko:'대정읍', zh:'大靜', lat:33.2450, lng:126.2900 },
+      { ko:'서광리 오설록', zh:'西廣里', lat:33.3060, lng:126.2900 },
+      { ko:'애월읍', zh:'涯月', lat:33.4630, lng:126.3200 },
+      { ko:'애월 봉성리', zh:'鳳城里', lat:33.4300, lng:126.3300 },
+      { ko:'한림읍 협재', zh:'挾才', lat:33.3940, lng:126.2400 },
+      { ko:'한림읍', zh:'翰林', lat:33.4110, lng:126.2650 },
+    ];
+    function nearestRegion(lat, lng) {
+      let best = null, bd = Infinity;
+      REGIONS.forEach(r => { const d = haversine({ lat, lng }, r); if (d < bd) { bd = d; best = r; } });
+      return bd < 15 ? best : null;
+    }
+    const regionOf = item => (item.lat != null && nearestRegion(item.lat, item.lng)) || { ko:'제주', zh:'濟州' };
+    function openMatjip(region) {
+      openNaver(`${region.ko} 맛집`);
+    }
+    /* CATCHTABLE 國際版：先複製韓文店名，再開 App（未安裝則到商店下載） */
+    async function openCatchtable(item) {
+      const name = (item.query || item.name).trim();
+      try { await navigator.clipboard.writeText(name); showToast(`已複製「${name}」，到 CATCHTABLE 貼上搜尋`); }
+      catch (e) { showToast(`在 CATCHTABLE 搜尋：${name}`); }
+      const ua = navigator.userAgent;
+      const url = /Android/i.test(ua)
+        ? 'https://play.google.com/store/search?q=CATCH%20TABLE%20Global&c=apps'
+        : 'https://apps.apple.com/app/id1639046576';
+      setTimeout(() => window.open(url, '_blank'), 900);
+    }
+    const locating = ref(false);
+    function nearbyMatjip() {
+      if (!navigator.geolocation) { openNaver('맛집'); return; }
+      locating.value = true;
+      navigator.geolocation.getCurrentPosition(pos => {
+        locating.value = false;
+        const r = nearestRegion(pos.coords.latitude, pos.coords.longitude);
+        if (r) { showToast(`搜尋 ${r.zh} 附近 맛집`); openNaver(`${r.ko} 맛집`); }
+        else openNaver('맛집');   // 不在濟州時：Naver Map App 會以目前位置搜尋
+      }, () => {
+        locating.value = false;
+        openNaver('맛집');
+      }, { enableHighAccuracy: false, timeout: 6000, maximumAge: 300000 });
+    }
+
     function openNaver(q) {
       if (!q) return;
       const query = encodeURIComponent(q);
@@ -1331,7 +1434,7 @@ createApp({
       tabs, tab, switchTab,
       curDate, selectDate, weekday, dayNum, md, fmtFull, nights, hotelTonight,
       catFilter, visibleItems, hasHours, flightOf, segments, cycleMode, listEl,
-      openNaver, curWeather, outfit,
+      openNaver, curWeather, outfit, regionOf, openMatjip, nearbyMatjip, locating, openCatchtable,
       fx, fxUnit, fxResult, fxQuick, krwToTwd,
       shopping, expenses, info, totalKRW, sumBy, catSum, expenseGroups,
       sheet, form, sheetTitle, confirmDelete, openSheet, closeSheet, editItem, onFab,
