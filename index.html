@@ -187,6 +187,13 @@
             </span>
             <span v-html="icon('nav','w-4 h-4')"></span>
           </button>
+          <div class="mt-2 flex gap-1.5 overflow-x-auto no-scrollbar">
+            <span class="shrink-0 self-center text-[11px] text-sub mr-0.5">我附近的</span>
+            <button v-for="n in NEAR_ME" :key="n.key" @click="searchNearMe(n)"
+                    class="shrink-0 inline-flex items-center gap-1 px-2.5 py-1.5 rounded-full text-[12px] font-bold press" :style="{ background: n.bg, color: n.color }">
+              <span>{{ n.emoji }}</span>{{ n.label }}
+            </button>
+          </div>
         </div>
 
         <!-- 天氣資訊 -->
@@ -1172,10 +1179,18 @@ createApp({
     }
     /* 飯店附近：大創／運動用品／桌球館（Naver Map 即時搜尋） */
     const NEARBY = [
+      { key:'cu',    emoji:'🏪', label:'CU',       kw:'CU 편의점',  bg:'#F0E9F7', color:'#8A5FB5' },
+      { key:'gs25',  emoji:'🏪', label:'GS25',     kw:'GS25',       bg:'#E4F1FA', color:'#3E86B5' },
+      { key:'cafe',  emoji:'☕', label:'咖啡廳',   kw:'카페',       bg:'#F4ECE3', color:'#9A6B45' },
+      { key:'emart', emoji:'🛍', label:'E-mart',   kw:'이마트',     bg:'#FFF4CF', color:'#B88A14',
+        fixed:{ '제주시 연동':'이마트 신제주점', '서귀포 성산':'이마트 서귀포점', '서귀포시':'이마트 서귀포점', '제주 한림':'이마트 신제주점' } },
+      { key:'mart',  emoji:'🧺', label:'超市',     kw:'마트',       bg:'#EAF4EC', color:'#4E9460',
+        fixed:{ '서귀포 성산':'성산 하나로마트', '제주 한림':'한림 하나로마트' } },
       { key:'daiso', emoji:'🛒', label:'大創',     kw:'다이소',     bg:'#FDECEF', color:'#D0566E' },
       { key:'sport', emoji:'👟', label:'運動用品', kw:'스포츠용품', bg:'#E6EFF6', color:'#5C82B5' },
       { key:'tt',    emoji:'🏓', label:'桌球館',   kw:'탁구장',     bg:'#E9F1E6', color:'#6E8F69' },
     ];
+    const NEAR_ME = NEARBY.filter(n => ['cu','gs25','cafe','mart','daiso'].includes(n.key));
     const HOTEL_AREAS = [
       { ko:'제주시 연동', zh:'蓮洞・新濟州', lat:33.4880, lng:126.4925 },
       { ko:'서귀포 성산', zh:'城山', lat:33.4690, lng:126.9310 },
@@ -1190,22 +1205,24 @@ createApp({
     function openNearby(n, h) {
       const a = areaOf(h);
       showToast(`搜尋${a.zh}附近的${n.label}`);
-      openNaver(`${a.ko} ${n.kw}`);
+      openNaver(n.fixed?.[a.ko] || `${a.ko} ${n.kw}`);
     }
     const locating = ref(false);
-    function nearbyMatjip() {
-      if (!navigator.geolocation) { openNaver('맛집'); return; }
+    function searchNearMe(n) {
+      const kw = n.kw, label = n.label;
+      if (!navigator.geolocation) { openNaver(kw); return; }
       locating.value = true;
       navigator.geolocation.getCurrentPosition(pos => {
         locating.value = false;
         const r = nearestRegion(pos.coords.latitude, pos.coords.longitude);
-        if (r) { showToast(`搜尋 ${r.zh} 附近 맛집`); openNaver(`${r.ko} 맛집`); }
-        else openNaver('맛집');   // 不在濟州時：Naver Map App 會以目前位置搜尋
+        if (r) { showToast(`搜尋 ${r.zh} 附近的${label}`); openNaver(`${r.ko} ${kw}`); }
+        else openNaver(kw);   // 不在濟州時：Naver Map App 會以目前位置搜尋
       }, () => {
         locating.value = false;
-        openNaver('맛집');
+        openNaver(kw);
       }, { enableHighAccuracy: false, timeout: 6000, maximumAge: 300000 });
     }
+    const nearbyMatjip = () => searchNearMe({ kw:'맛집', label:' 맛집' });
 
     function openNaver(q) {
       if (!q) return;
@@ -1471,7 +1488,7 @@ createApp({
       tabs, tab, switchTab,
       curDate, selectDate, weekday, dayNum, md, fmtFull, nights, hotelTonight,
       catFilter, visibleItems, hasHours, flightOf, segments, cycleMode, listEl,
-      openNaver, curWeather, outfit, regionOf, openMatjip, nearbyMatjip, locating, openCatchtable, NEARBY, areaOf, openNearby,
+      openNaver, curWeather, outfit, regionOf, openMatjip, nearbyMatjip, locating, openCatchtable, NEARBY, NEAR_ME, searchNearMe, areaOf, openNearby,
       fx, fxUnit, fxResult, fxQuick, krwToTwd,
       shopping, expenses, info, totalKRW, sumBy, catSum, expenseGroups,
       sheet, form, sheetTitle, confirmDelete, openSheet, closeSheet, editItem, onFab,
