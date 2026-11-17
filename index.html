@@ -303,6 +303,14 @@
                     <span class="w-5 h-5 rounded-full bg-[#6FA7B8] text-white grid place-items-center" v-html="icon('ferry','w-3 h-3')"></span>
                     {{ item.link.label }}
                   </a>
+                  <div v-if="item.cat === '住宿' && item.lat != null">
+                    <div class="mt-2.5 flex flex-wrap gap-1.5">
+                  <button v-for="n in NEARBY" :key="n.key" @click.stop="openNearby(n, item)"
+                          class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-full text-[12px] font-bold press" :style="{ background: n.bg, color: n.color }">
+                    <span>{{ n.emoji }}</span>{{ n.label }}
+                  </button>
+                </div>
+                  </div>
                   <button v-if="item.cat === '美食'" @click.stop="openMatjip(regionOf(item))"
                           class="mt-2.5 inline-flex items-center gap-1.5 pl-2 pr-3 py-1.5 rounded-full bg-[#FFF1CC] text-amber text-[12px] font-bold press">
                     <span class="w-5 h-5 rounded-full bg-[#03C75A] text-white grid place-items-center" v-html="icon('food','w-3 h-3')"></span>
@@ -417,6 +425,13 @@
                 <span v-html="icon('nav','w-4 h-4')"></span>Naver 導航
               </button>
             </div>
+            <p class="mt-3 text-[11px] text-sub">飯店附近（{{ areaOf(h).zh }}）：</p>
+            <div class="mt-2.5 flex flex-wrap gap-1.5">
+                  <button v-for="n in NEARBY" :key="n.key" @click.stop="openNearby(n, h)"
+                          class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-full text-[12px] font-bold press" :style="{ background: n.bg, color: n.color }">
+                    <span>{{ n.emoji }}</span>{{ n.label }}
+                  </button>
+                </div>
           </div>
         </div>
 
@@ -1155,6 +1170,28 @@ createApp({
         : 'https://apps.apple.com/app/id1639046576';
       setTimeout(() => window.open(url, '_blank'), 900);
     }
+    /* 飯店附近：大創／運動用品／桌球館（Naver Map 即時搜尋） */
+    const NEARBY = [
+      { key:'daiso', emoji:'🛒', label:'大創',     kw:'다이소',     bg:'#FDECEF', color:'#D0566E' },
+      { key:'sport', emoji:'👟', label:'運動用品', kw:'스포츠용품', bg:'#E6EFF6', color:'#5C82B5' },
+      { key:'tt',    emoji:'🏓', label:'桌球館',   kw:'탁구장',     bg:'#E9F1E6', color:'#6E8F69' },
+    ];
+    const HOTEL_AREAS = [
+      { ko:'제주시 연동', zh:'蓮洞・新濟州', lat:33.4880, lng:126.4925 },
+      { ko:'서귀포 성산', zh:'城山', lat:33.4690, lng:126.9310 },
+      { ko:'서귀포시', zh:'西歸浦', lat:33.2480, lng:126.5100 },
+      { ko:'제주 한림', zh:'翰林・挾才', lat:33.3930, lng:126.2440 },
+    ];
+    const areaOf = h => {
+      let best = HOTEL_AREAS[0], bd = Infinity;
+      HOTEL_AREAS.forEach(a => { const d = haversine(h, a); if (d < bd) { bd = d; best = a; } });
+      return best;
+    };
+    function openNearby(n, h) {
+      const a = areaOf(h);
+      showToast(`搜尋${a.zh}附近的${n.label}`);
+      openNaver(`${a.ko} ${n.kw}`);
+    }
     const locating = ref(false);
     function nearbyMatjip() {
       if (!navigator.geolocation) { openNaver('맛집'); return; }
@@ -1434,7 +1471,7 @@ createApp({
       tabs, tab, switchTab,
       curDate, selectDate, weekday, dayNum, md, fmtFull, nights, hotelTonight,
       catFilter, visibleItems, hasHours, flightOf, segments, cycleMode, listEl,
-      openNaver, curWeather, outfit, regionOf, openMatjip, nearbyMatjip, locating, openCatchtable,
+      openNaver, curWeather, outfit, regionOf, openMatjip, nearbyMatjip, locating, openCatchtable, NEARBY, areaOf, openNearby,
       fx, fxUnit, fxResult, fxQuick, krwToTwd,
       shopping, expenses, info, totalKRW, sumBy, catSum, expenseGroups,
       sheet, form, sheetTitle, confirmDelete, openSheet, closeSheet, editItem, onFab,
