@@ -305,6 +305,11 @@
                     <p v-if="item.cat==='景點' && item.ticket" class="flex gap-1.5"><span class="shrink-0">門票</span><span class="text-ink/80">{{ item.ticket }}</span></p>
                     <p v-if="item.note" class="leading-relaxed whitespace-pre-line text-ink/70">{{ item.note }}</p>
                   </div>
+                  <div v-if="item.sunriseFor" class="mt-2.5 rounded-2xl bg-gradient-to-r from-[#FFE7B0] to-[#FBD3A6] px-3.5 py-3 text-[#8A5A2A]">
+                    <p class="text-[11px]">{{ md(item.sunriseFor) }} 城山日出峰 日出</p>
+                    <p class="font-maru text-[26px] font-bold leading-tight">{{ sunriseInfo(item.sunriseFor).sunrise }}</p>
+                    <p class="text-[12px] mt-0.5">建議 {{ sunriseInfo(item.sunriseFor).leave }} 從民宿出發・{{ sunriseInfo(item.sunriseFor).climb }} 前開始登山</p>
+                  </div>
                   <a v-if="item.link" :href="item.link.url" target="_blank" rel="noopener" @click.stop
                      class="mt-2.5 mr-1.5 inline-flex items-center gap-1.5 pl-2 pr-3 py-1.5 rounded-full bg-[#E6F1F4] text-[#4F8597] text-[12px] font-bold press">
                     <span class="w-5 h-5 rounded-full bg-[#6FA7B8] text-white grid place-items-center" v-html="icon('ferry','w-3 h-3')"></span>
@@ -856,6 +861,7 @@ const DEFAULT_DAYS = {
     P('美食','17:45','晚餐：月高家 월고집 月汀里本店 ★必去','월고집 월정리본점', 33.5575, 126.7985, { hours:'21:00 最後點餐', note:'海景黑豬肉，店員代烤；黑豬近古基 600g 約 ₩66,000\n另有泡菜鍋、大醬湯，有停車場' }),
     P('住宿','19:15','入住 寶島民宿','보물섬펜션', 33.4690, 126.9310, { hours:'22:00 前入住免先聯絡', note:'沿東北海岸開約 30 分鐘' }),
     P('其他','21:00','⛴ 查詢明天牛島渡輪是否開船','보물섬펜션', 33.4690, 126.9310, { link: { label:'城山此刻：查渡輪是否開船', url:'https://chengshan.kr/zh-hant' }, note:'點下方按鈕開「城山此刻」，看牛島渡輪運航狀態與城山天氣\n明早出發前再看一次，確認當天真的有開船' }),
+    P('其他','21:05','🌅 查詢明天城山日出峰日出時間','성산일출봉', 33.4690, 126.9310, { sunriseFor:'2026-11-30', link: { label:'timeanddate：城山日出時間', url:'https://www.timeanddate.com/astronomy/@33.4581,126.9425' }, note:'日出峰售票處 11–12 月 06:00 開，登頂約 30–40 分鐘\n設好鬧鐘，帶毛帽、手套、頭燈或手機手電筒' }),
   ],
   '2026-11-30': [
     P('景點','06:30','城山日出峰看日出（選擇）★必去','성산일출봉', 33.4581, 126.9425, { hours:'11–12 月 06:00–18:00', ticket:'成人 ₩5,000', note:'日出約 7:20，登頂約 30–40 分鐘' }),
@@ -976,6 +982,34 @@ const MODE = {
   walk:{ icon:'walk', label:'步行',   calc: km => km / 4.5 * 60 },
   car: { icon:'car',  label:'開車',   calc: km => km / 38 * 60 + 4 },
 };
+/* 日出時間（NOAA 演算法，韓國時間 KST） */
+function sunriseKST(dateStr, lat, lng) {
+  const rad = Math.PI / 180, deg = 180 / Math.PI;
+  const [y, m, d] = dateStr.split('-').map(Number);
+  const N = Math.round((Date.UTC(y, m - 1, d) - Date.UTC(y, 0, 0)) / 864e5);
+  const lngHour = lng / 15;
+  const t = N + (6 - lngHour) / 24;
+  const M = 0.9856 * t - 3.289;
+  let L = M + 1.916 * Math.sin(M * rad) + 0.020 * Math.sin(2 * M * rad) + 282.634;
+  L = ((L % 360) + 360) % 360;
+  let RA = deg * Math.atan(0.91764 * Math.tan(L * rad));
+  RA = ((RA % 360) + 360) % 360;
+  RA += Math.floor(L / 90) * 90 - Math.floor(RA / 90) * 90;
+  RA /= 15;
+  const sinDec = 0.39782 * Math.sin(L * rad), cosDec = Math.cos(Math.asin(sinDec));
+  const cosH = (Math.cos(90.833 * rad) - sinDec * Math.sin(lat * rad)) / (cosDec * Math.cos(lat * rad));
+  const H = (360 - deg * Math.acos(cosH)) / 15;
+  const T = H + RA - 0.06571 * t - 6.622;
+  const UT = ((T - lngHour) % 24 + 24) % 24;
+  return Math.round(((UT + 9) % 24) * 60);
+}
+const hhmm = x => `${String(Math.floor(x / 60)).padStart(2, '0')}:${String(((x % 60) + 60) % 60).padStart(2, '0')}`;
+const SEONGSAN_PEAK = { lat: 33.4581, lng: 126.9425 };
+function sunriseInfo(dateStr) {
+  const sr = sunriseKST(dateStr, SEONGSAN_PEAK.lat, SEONGSAN_PEAK.lng);
+  return { sunrise: hhmm(sr), climb: hhmm(sr - 50), leave: hhmm(sr - 70) };
+}
+
 const fmtMin = m => m < 60 ? `${Math.max(1, Math.round(m))} 分` : `${Math.floor(m/60)} 小時 ${Math.round(m%60)} 分`;
 
 function weatherKind(code) {
@@ -1025,6 +1059,10 @@ createApp({
       const d29 = days['2026-11-29'];
       if (d29 && !d29.some(i => i.link?.url === FERRY_URL)) {
         const def = DEFAULT_DAYS['2026-11-29'].find(i => i.link?.url === FERRY_URL);
+        if (def) d29.push(clone(def));
+      }
+      if (d29 && !d29.some(i => i.sunriseFor)) {
+        const def = DEFAULT_DAYS['2026-11-29'].find(i => i.sunriseFor);
         if (def) d29.push(clone(def));
       }
       const port = (days['2026-11-30'] || []).find(i => i.name.includes('城山港'));
@@ -1488,7 +1526,7 @@ createApp({
       tabs, tab, switchTab,
       curDate, selectDate, weekday, dayNum, md, fmtFull, nights, hotelTonight,
       catFilter, visibleItems, hasHours, flightOf, segments, cycleMode, listEl,
-      openNaver, curWeather, outfit, regionOf, openMatjip, nearbyMatjip, locating, openCatchtable, NEARBY, NEAR_ME, searchNearMe, areaOf, openNearby,
+      openNaver, curWeather, outfit, sunriseInfo, regionOf, openMatjip, nearbyMatjip, locating, openCatchtable, NEARBY, NEAR_ME, searchNearMe, areaOf, openNearby,
       fx, fxUnit, fxResult, fxQuick, krwToTwd,
       shopping, expenses, info, totalKRW, sumBy, catSum, expenseGroups,
       sheet, form, sheetTitle, confirmDelete, openSheet, closeSheet, editItem, onFab,
