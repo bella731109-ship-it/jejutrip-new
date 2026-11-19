@@ -302,7 +302,7 @@
                   <p class="font-maru text-[16px] font-bold mt-1.5 leading-snug">{{ item.name }}</p>
                   <div class="mt-1.5 space-y-1 text-[12px] text-sub">
                     <p v-if="hasHours(item.cat) && item.hours" class="flex gap-1.5"><span class="shrink-0">營業</span><span class="text-ink/80">{{ item.hours }}</span></p>
-                    <p v-if="item.cat==='景點' && item.ticket" class="flex gap-1.5"><span class="shrink-0">門票</span><span class="text-ink/80">{{ item.ticket }}</span></p>
+                    <p v-if="item.cat==='景點' && item.ticket" class="flex gap-1.5"><span class="shrink-0">門票</span><span class="text-ink/80 whitespace-pre-line">{{ item.ticket }}</span></p>
                     <p v-if="item.note" class="leading-relaxed whitespace-pre-line text-ink/70">{{ item.note }}</p>
                   </div>
                   <div v-if="item.sunriseFor" class="mt-2.5 rounded-2xl bg-gradient-to-r from-[#FFE7B0] to-[#FBD3A6] px-3.5 py-3 text-[#8A5A2A]">
@@ -310,6 +310,10 @@
                     <p class="font-maru text-[26px] font-bold leading-tight">{{ sunriseInfo(item.sunriseFor).sunrise }}</p>
                     <p class="text-[12px] mt-0.5">建議 {{ sunriseInfo(item.sunriseFor).leave }} 從民宿出發・{{ sunriseInfo(item.sunriseFor).climb }} 前開始登山</p>
                   </div>
+                  <a v-for="l in (item.links || [])" :key="l.url" :href="l.url" target="_blank" rel="noopener" @click.stop
+                     class="mt-2.5 mr-1.5 inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-[12px] font-bold press" :style="{ background: l.bg, color: l.color }">
+                    🎟 {{ l.label }}
+                  </a>
                   <a v-if="item.link" :href="item.link.url" target="_blank" rel="noopener" @click.stop
                      class="mt-2.5 mr-1.5 inline-flex items-center gap-1.5 pl-2 pr-3 py-1.5 rounded-full bg-[#E6F1F4] text-[#4F8597] text-[12px] font-bold press">
                     <span class="w-5 h-5 rounded-full bg-[#6FA7B8] text-white grid place-items-center" v-html="icon('ferry','w-3 h-3')"></span>
@@ -343,6 +347,7 @@
             </div>
           </div>
           <p class="text-[11px] text-sub/80 text-center mt-6 leading-relaxed">交通時間為直線距離估算，點交通標籤可切換 步行 / 開車<br/>點卡片即開啟 Naver Map</p>
+          <p class="text-[10px] text-sub/60 text-center mt-3">版本 11/19-B（12/3 新順序）</p>
         </div>
       </section>
 
@@ -763,6 +768,30 @@ const CATS = ['景點','住宿','美食','購物','航班','其他'];
 const EXP_CATS = ['交通','飲食','住宿','門票','購物','其他'];
 const STORE_KEY = 'jeju-trip-2026-v2';
 
+
+/* 9.81 Park 線上票價（台幣，價格會變動，以訂購頁為準） */
+const TICKET_981 = 'Klook：早鳥 Race & Play 1人 NT$783・2人(大+小) NT$1,009／全套 1人 NT$1,211\nKKday：NT$789 起（可用折扣碼 JEJU200）';
+const LINKS_981 = [
+  { label:'Klook 訂票', url:'https://www.klook.com/zh-TW/activity/86261-981-park-ticket-jeju/', bg:'#FFEDE3', color:'#E8590C' },
+  { label:'KKday 訂票', url:'https://www.kkday.com/zh-tw/product/131733', bg:'#E2F6F7', color:'#13939C' },
+];
+
+/* 景點門票（2026 年資料；現場價格以當天公告為準） */
+const TICKETS = {
+  '용두암': '免費',
+  '스누피가든': '成人 ₩19,000・兒童 ₩13,000（VISITKOREA 會員線上 9 折）',
+  '우도': '渡輪來回＋入島費：成人 ₩11,000・國高中 ₩10,800・國小 ₩3,800（只能現場買，要帶護照）',
+  '광치기해변': '免費',
+  '아쿠아플라넷 제주': '線上入場券約 ₩28,200（含海洋劇場表演、海女展）',
+  '정방폭포': '成人 ₩2,000・青少年／兒童 ₩1,000',
+  '돌코리숲': '成人 ₩19,000・青少年 ₩16,000（雨天 ₩12,000／₩10,000）',
+  '헬로키티아일랜드': '線上約 ₩11,000–12,000 起',
+  '제주항공우주박물관': '成人 ₩10,000・青少年 ₩9,000・兒童 ₩8,000',
+
+  '아르떼뮤지엄 제주': '成人 ₩18,000・青少年 ₩14,000・兒童 ₩11,000',
+  '협재해수욕장': '免費',
+};
+
 /* 每天依行程內容的穿搭小提醒 */
 const DAY_WEAR = {
   '2026-11-28': '早上搭機、晚上看亂打秀：室內有暖氣，洋蔥式穿法方便穿脫',
@@ -770,7 +799,7 @@ const DAY_WEAR = {
   '2026-11-30': '清晨爬日出峰＋渡輪海風是全程最冷的一天：毛帽、手套、圍巾全上，穿運動鞋',
   '2026-12-01': '水族館在室內、民俗村和瀑布在戶外：外套好穿脫，瀑布步道有階梯',
   '2026-12-02': '園區戶外走路多：好走的鞋＋可收進包包的外套',
-  '2026-12-03': '9.81 Park 規定穿包鞋／平底鞋（不能穿涼鞋、高跟鞋）；挾才海邊傍晚風大',
+  '2026-12-03': '一早就玩 9.81 Park：規定穿包鞋／平底鞋，早上山區風大要穿防風外套；挾才海邊傍晚也很冷',
   '2026-12-04': '早上海邊散步風大；回程飛機上帶件薄外套，退稅品記得放隨身',
 };
 const AIRPORT = { lat: 33.5070, lng: 126.4930 };
@@ -893,17 +922,17 @@ const DEFAULT_DAYS = {
     P('住宿','19:30','續住 Vistacay 世界盃飯店','비스타케이호텔 월드컵', 33.2480, 126.5100),
   ],
   '2026-12-03': [
-    P('景點','09:40','O\'sulloc 綠茶博物館 ★必去','오설록 티뮤지엄', 33.3059, 126.2894, { hours:'冬季 09:00–18:00', ticket:'免費（免費停車）', note:'必吃綠茶霜淇淋；「抹茶站」可試喝現磨抹茶\n隔壁是 Innisfree 濟州之家' }),
-    P('美食','11:15','午餐：Tea Terrace','오설록 티뮤지엄', 33.3060, 126.2896, { note:'抹茶拌麵、抹茶拌飯，在博物館裡吃' }),
-    P('景點','13:15','9.81 Park 重力賽車 ★必去','9.81파크 제주', 33.3870, 126.3660, { hours:'09:00–18:00（最後報到 17:40）', ticket:'請見官網', note:'穿包鞋或平底鞋，先下載 App 綁定票券\n天候不佳時戶外項目可能暫停' }),
-    P('景點','15:30','ARTE MUSEUM 濟州 ★必去','아르떼뮤지엄 제주', 33.3967, 126.3447, { hours:'10:00–20:00（19:00 停止入場）', ticket:'成人約 ₩18,000', note:'沉浸式媒體藝術館，可加購 Tea Bar 茶飲' }),
-    P('景點','17:00','挾才海邊看夕陽','협재해수욕장', 33.3940, 126.2390, { note:'12 月初日落約 17:20\n想從容看夕陽，可先看夕陽再回 ARTE MUSEUM（19:00 前入場）' }),
-    P('住宿','18:00','入住 挾才阿魯米飯店・晚餐','아루미호텔 협재점', 33.3930, 126.2440, { hours:'15:00 入住 / 11:00 退房', note:'晚餐推薦「拉麵的先生包餃子的太太」韓牛水煮肉餃子火鍋（16:00–17:00 休息）' }),
+    P('景點','09:00','9.81 Park 重力賽車（早鳥場）★必去','9.81파크 제주', 33.3870, 126.3660, { hours:'09:00–18:00（早鳥場 09:00–10:00，最後搭乘 09:50）', ticket: TICKET_981, links: LINKS_981, note:'08:05 從 Vistacay 出發（車程約 50 分）\n穿包鞋或平底鞋（不能穿涼鞋、拖鞋），先下載 9.81 App 綁定票券\n天候不佳時戶外項目可能暫停' }),
+    P('景點','10:40','ARTE MUSEUM 濟州 ★必去','아르떼뮤지엄 제주', 33.3967, 126.3447, { hours:'10:00–20:00（19:00 停止入場）', ticket:'成人 ₩18,000・青少年 ₩14,000・兒童 ₩11,000', note:'沉浸式媒體藝術館，約 1 小時；跟 9.81 Park 車程約 10 分\n可加購 Tea Bar 茶飲' }),
+    P('美食','12:30','午餐：O\'sulloc Tea Terrace','오설록 티뮤지엄', 33.3060, 126.2896, { note:'從 ARTE 往南開約 30 分\n抹茶拌麵、抹茶拌飯，在博物館裡吃' }),
+    P('景點','13:30','O\'sulloc 綠茶博物館 ★必去','오설록 티뮤지엄', 33.3059, 126.2894, { hours:'冬季 09:00–18:00', ticket:'免費（免費停車）', note:'必吃綠茶霜淇淋；「抹茶站」可試喝現磨抹茶\n隔壁是 Innisfree 濟州之家' }),
+    P('住宿','15:00','入住 挾才阿魯米飯店（先休息）','아루미호텔 협재점', 33.3930, 126.2440, { hours:'15:00 入住 / 11:00 退房', note:'從 O\'sulloc 開約 25 分\n放行李、休息一下，或逛挾才附近咖啡廳' }),
+    P('景點','17:00','挾才海邊看夕陽','협재해수욕장', 33.3940, 126.2390, { ticket:'免費', note:'12 月初日落約 17:20，天氣好可以看到飛揚島' }),
+    P('美食','18:00','晚餐：挾才一帶','협재 맛집', 33.3950, 126.2450, { note:'推薦「拉麵的先生包餃子的太太」韓牛水煮肉餃子火鍋（16:00–17:00 休息）' }),
   ],
   '2026-12-04': [
     P('景點','09:00','挾才・金陵海邊 晨間散步','협재해수욕장', 33.3940, 126.2390, { note:'先到挾才秀烏龍門口登記排隊；天氣好可以看到飛揚島' }),
     P('購物','11:00','Mumu Jeju 무무제주 ★必去','무무제주', 33.4300, 126.3300, { hours:'11:00–18:00，週三、四公休', note:'橘子周邊專賣店：文具、吊飾、手機周邊' }),
-    P('景點','12:10','項坡頭里抗蒙遺址','항파두리 항몽유적지', 33.4530, 126.4110, { hours:'09:00–18:00，全年無休', ticket:'免費', note:'高麗三別抄抗蒙最後據點，順著土城走約 30 分鐘' }),
     P('美食','13:10','東門市場 午餐＆伴手禮 ★必去','동문재래시장', 33.5122, 126.5263, { hours:'約 08:00–21:00', note:'買橘子、巧克力、海苔' }),
     P('景點','14:10','濟州牧官衙・觀德亭 ★必去','제주목 관아', 33.5132, 126.5216, { hours:'09:00–18:00，全年無休', ticket:'成人 ₩1,500', note:'朝鮮時代濟州官府；觀德亭建於 1448 年' }),
     P('購物','15:00','舊城文創小店散步 ★必去','더 아일랜더 제주', 33.5128, 126.5222, { note:'The Islander（10:30–19:00，濟州限定香水、香皂）\nplayworks（12:00–18:30，插畫商品）、misomiso、hogg\n時間夠再去機場附近免稅店' }),
@@ -1053,6 +1082,19 @@ createApp({
 
     const days = reactive(saved?.days || clone(DEFAULT_DAYS));
     DATES.forEach(d => { if (!days[d]) days[d] = []; });
+    // 11/19：更新景點門票、移除項坡頭里（只執行一次）
+    try {
+      if (!localStorage.getItem('jeju-upd-1119')) {
+        Object.values(days).forEach(arr => arr.forEach(i => { if (i.cat === '景點' && TICKETS[i.query]) i.ticket = TICKETS[i.query]; }));
+        const d4 = days['2026-12-04'];
+        if (d4) { const k = d4.findIndex(i => i.query === '항파두리 항몽유적지'); if (k >= 0) d4.splice(k, 1); }
+        localStorage.setItem('jeju-upd-1119', '1');
+      }
+      if (!localStorage.getItem('jeju-upd-1119b')) {
+        days['2026-12-03'] = clone(DEFAULT_DAYS['2026-12-03']);
+        localStorage.setItem('jeju-upd-1119b', '1');
+      }
+    } catch (e) {}
     // 舊資料補上新功能（不會動到你自己新增或修改的內容）
     (function migrate() {
       const FERRY_URL = 'https://chengshan.kr/zh-hant';
