@@ -348,7 +348,8 @@
             </div>
           </div>
           <p class="text-[11px] text-sub/80 text-center mt-6 leading-relaxed">交通時間為直線距離估算，點交通標籤可切換 步行 / 開車<br/>點卡片即開啟 Naver Map</p>
-          <p class="text-[10px] text-sub/60 text-center mt-3">版本 11/19-C（12/3 新順序＋門票）</p>
+          <button @click="resetDay" class="mx-auto mt-4 block text-[11px] text-sub underline underline-offset-2 press">還原這一天的預設行程</button>
+          <p class="text-[10px] text-sub/60 text-center mt-3">版本 11/19-E（加入해녀고기・오는정김밥）</p>
         </div>
       </section>
 
@@ -911,6 +912,7 @@ const DEFAULT_DAYS = {
     P('景點','13:30','城邑民俗村 성읍민속마을 ★必去','성읍민속마을', 33.3870, 126.8010, { ticket:'免費（免費停車）', note:'朝鮮時代旌義縣縣城，茅草屋、黑石牆、石爺爺\n入口可申請免費文化解說，約 40 分鐘' }),
     P('景點','15:40','正房瀑布','정방폭포', 33.2448, 126.5717, { ticket:'成人 ₩2,000・青少年／兒童 ₩1,000', note:'直接落入海中的瀑布；途中可以停表善海邊' }),
     P('住宿','16:40','入住 Vistacay 世界盃飯店','비스타케이호텔 월드컵', 33.2480, 126.5100, { hours:'15:00 入住 / 11:00 退房' }),
+    P('美食','17:40','오는정김밥 Oneunjeong Gimbap（外帶）★必去','오는정김밥', 33.2505, 126.5655, { hours:'09:00–19:00（13:00–14:30 休息），週日公休', note:'1985 年開業的西歸浦名店，招牌是加了炸豆皮的「오는정김밥」\n⚠️ 要先打電話預約取餐時間：064-762-8927（建議 12/1 早上就打）\n只能外帶、一次至少 2 條；超過預約時間 30 分鐘可能被取消\n就在每日偶來市場旁，拿完直接逛市場' }),
     P('美食','18:00','每日偶來市場・李仲燮街','서귀포매일올레시장', 33.2497, 126.5638, { hours:'市場冬季營業到 20:00', note:'晚餐推薦黑豬肉 BBQ（16:30 開）或南妹家王帶魚（烤白帶魚、一人份）\n李仲燮街有小工坊可逛' }),
   ],
   '2026-12-02': [
@@ -923,7 +925,7 @@ const DEFAULT_DAYS = {
     P('住宿','19:30','續住 Vistacay 世界盃飯店','비스타케이호텔 월드컵', 33.2480, 126.5100),
   ],
   '2026-12-03': [
-    P('景點','09:00','9.81 Park 重力賽車（早鳥場）★必去','9.81파크 제주', 33.3870, 126.3660, { hours:'09:00–18:00（早鳥場 09:00–10:00，最後搭乘 09:50）', ticket: TICKET_981, links: LINKS_981, note:'08:05 從 Vistacay 出發（車程約 50 分）\n穿包鞋或平底鞋（不能穿涼鞋、拖鞋），先下載 9.81 App 綁定票券\n天候不佳時戶外項目可能暫停' }),
+    P('景點','09:00','9.81 Park 重力賽車（早鳥場）★必去','9.81파크 제주', 33.3870, 126.3660, { v:1119, hours:'09:00–18:00（早鳥場 09:00–10:00，最後搭乘 09:50）', ticket: TICKET_981, links: LINKS_981, note:'08:05 從 Vistacay 出發（車程約 50 分）\n穿包鞋或平底鞋（不能穿涼鞋、拖鞋），先下載 9.81 App 綁定票券\n天候不佳時戶外項目可能暫停' }),
     P('景點','10:40','ARTE MUSEUM 濟州 ★必去','아르떼뮤지엄 제주', 33.3967, 126.3447, { hours:'10:00–20:00（19:00 停止入場）', ticket:'成人 ₩18,000・青少年 ₩14,000・兒童 ₩11,000', note:'沉浸式媒體藝術館，約 1 小時；跟 9.81 Park 車程約 10 分\n可加購 Tea Bar 茶飲' }),
     P('美食','12:30','午餐：O\'sulloc Tea Terrace','오설록 티뮤지엄', 33.3060, 126.2896, { note:'從 ARTE 往南開約 30 分\n抹茶拌麵、抹茶拌飯，在博物館裡吃' }),
     P('景點','13:30','O\'sulloc 綠茶博物館 ★必去','오설록 티뮤지엄', 33.3059, 126.2894, { hours:'冬季 09:00–18:00', ticket:'免費（免費停車）', note:'必吃綠茶霜淇淋；「抹茶站」可試喝現磨抹茶\n隔壁是 Innisfree 濟州之家' }),
@@ -934,9 +936,10 @@ const DEFAULT_DAYS = {
   '2026-12-04': [
     P('景點','09:00','挾才・金陵海邊 晨間散步','협재해수욕장', 33.3940, 126.2390, { ticket:'免費', note:'先到挾才秀烏龍門口登記排隊；天氣好可以看到飛揚島' }),
     P('購物','11:00','Mumu Jeju 무무제주 ★必去','무무제주', 33.4300, 126.3300, { hours:'11:00–18:00，週三、四公休', note:'橘子周邊專賣店：文具、吊飾、手機周邊' }),
-    P('美食','13:10','東門市場 午餐＆伴手禮 ★必去','동문재래시장', 33.5122, 126.5263, { hours:'約 08:00–21:00', note:'買橘子、巧克力、海苔' }),
-    P('景點','14:10','濟州牧官衙・觀德亭 ★必去','제주목 관아', 33.5132, 126.5216, { hours:'09:00–18:00，全年無休', ticket:'成人 ₩1,500', note:'朝鮮時代濟州官府；觀德亭建於 1448 年' }),
-    P('購物','15:00','舊城文創小店散步 ★必去','더 아일랜더 제주', 33.5128, 126.5222, { note:'The Islander（10:30–19:00，濟州限定香水、香皂）\nplayworks（12:00–18:30，插畫商品）、misomiso、hogg\n時間夠再去機場附近免稅店' }),
+    P('美食','12:20','午餐：해녀고기（海女黑豬肉）★必去','해녀고기', 33.4885, 126.4870, { hours:'12:00–21:30（約 21:00 最後點餐），全年無休', note:'由現役海女經營的黑豬肉烤肉店，店員代烤\n招牌：黑豬肉 600g＋鮑魚 2 顆、800g＋鮑魚 3 顆；也有海女抓的海鮮、海女拉麵\n在蓮洞（제주시 과원로 80），店門口可停約 3 台車\n訂位：0507-1312-8855' }),
+    P('購物','13:40','東門市場 伴手禮 ★必去','동문재래시장', 33.5122, 126.5263, { hours:'約 08:00–21:00', note:'買橘子、巧克力、海苔' }),
+    P('景點','14:30','濟州牧官衙・觀德亭 ★必去','제주목 관아', 33.5132, 126.5216, { hours:'09:00–18:00，全年無休', ticket:'成人 ₩1,500', note:'朝鮮時代濟州官府；觀德亭建於 1448 年' }),
+    P('購物','15:10','舊城文創小店散步 ★必去','더 아일랜더 제주', 33.5128, 126.5222, { note:'The Islander（10:30–19:00，濟州限定香水、香皂）\nplayworks（12:00–18:30，插畫商品）、misomiso、hogg\n時間夠再去機場附近免稅店' }),
     P('其他','16:30','加油・還車','제주시 도령로 171-1', 33.4870, 126.4830, { note:'還車前加滿油，再搭接駁車回機場\n17:30 抵達機場報到、辦退稅' }),
     P('航班','19:50','IT633 濟州 → 台中','제주국제공항', AIRPORT.lat, AIRPORT.lng, { flightKey:'back', segFixed:'接駁車 約 15 分', note:'21:05 抵達台中，回家囉！' }),
   ],
@@ -1083,6 +1086,17 @@ createApp({
 
     const days = reactive(saved?.days || clone(DEFAULT_DAYS));
     DATES.forEach(d => { if (!days[d]) days[d] = []; });
+    // 11/19：加入 오는정김밥（12/1）、해녀고기（12/4）
+    (function addNewShops() {
+      const d1 = days['2026-12-01'];
+      if (d1 && !d1.some(i => i.query === '오는정김밥')) {
+        const it = clone(DEFAULT_DAYS['2026-12-01'].find(i => i.query === '오는정김밥'));
+        let k = d1.findIndex(i => i.time && i.time > it.time); if (k < 0) k = d1.length;
+        d1.splice(k, 0, it);
+      }
+      const d4 = days['2026-12-04'];
+      if (d4 && !d4.some(i => i.query === '해녀고기')) days['2026-12-04'] = clone(DEFAULT_DAYS['2026-12-04']);
+    })();
     // 每次打開都補上門票（沒填或寫「請見官網」的景點）
     Object.values(days).forEach(arr => arr.forEach(i => {
       if (i.cat === '景點' && TICKETS[i.query] && (!i.ticket || i.ticket.includes('請見官網'))) i.ticket = TICKETS[i.query];
@@ -1092,10 +1106,10 @@ createApp({
     try {
       const d4 = days['2026-12-04'];
       if (d4) { const k = d4.findIndex(i => i.query === '항파두리 항몽유적지'); if (k >= 0) d4.splice(k, 1); }
-      if (!localStorage.getItem('jeju-upd-1119b')) {
-        days['2026-12-03'] = clone(DEFAULT_DAYS['2026-12-03']);
-        localStorage.setItem('jeju-upd-1119b', '1');
-      }
+      // 12/3 只要還是舊版排法（9.81 卡片沒有新版標記），就換成新順序
+      const d3 = days['2026-12-03'] || [];
+      const p981 = d3.find(i => i.query === '9.81파크 제주');
+      if (!d3.length || (p981 && !p981.v)) days['2026-12-03'] = clone(DEFAULT_DAYS['2026-12-03']);
     } catch (e) {}
     // 舊資料補上新功能（不會動到你自己新增或修改的內容）
     (function migrate() {
@@ -1183,6 +1197,13 @@ createApp({
       item.mode = cur === 'walk' ? 'car' : 'walk';
       showToast(`已切換為 ${MODE[item.mode].label}`);
     };
+
+    function resetDay() {
+      if (!window.confirm(`確定把 ${fmtFull(curDate.value)} 還原成預設行程嗎？這天自己新增或修改的內容會被取代。`)) return;
+      days[curDate.value] = clone(DEFAULT_DAYS[curDate.value] || []);
+      showToast('已還原這一天的行程');
+      nextTick(initSortable);
+    }
 
     /* ---------- 拖曳排序 ---------- */
     const listEl = ref(null);
@@ -1570,7 +1591,7 @@ createApp({
       tabs, tab, switchTab,
       curDate, selectDate, weekday, dayNum, md, fmtFull, nights, hotelTonight,
       catFilter, visibleItems, hasHours, flightOf, segments, cycleMode, listEl,
-      openNaver, curWeather, outfit, sunriseInfo, regionOf, openMatjip, nearbyMatjip, locating, openCatchtable, NEARBY, NEAR_ME, searchNearMe, areaOf, openNearby,
+      openNaver, curWeather, outfit, resetDay, sunriseInfo, regionOf, openMatjip, nearbyMatjip, locating, openCatchtable, NEARBY, NEAR_ME, searchNearMe, areaOf, openNearby,
       fx, fxUnit, fxResult, fxQuick, krwToTwd,
       shopping, expenses, info, totalKRW, sumBy, catSum, expenseGroups,
       sheet, form, sheetTitle, confirmDelete, openSheet, closeSheet, editItem, onFab,
